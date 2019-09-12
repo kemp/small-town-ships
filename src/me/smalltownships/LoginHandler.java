@@ -1,5 +1,8 @@
 package me.smalltownships;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class LoginHandler {
 	
 	static {
@@ -38,7 +41,15 @@ public class LoginHandler {
 	 * @return True if an account has the email address "email"
 	 */
 	public boolean emailExists(String email) {
-		// TODO: Query the database for an account with the given email address
+		// Checks within the verified accounts table, this can be changed if necessary
+		String sql = "select * from smalltownships.verifiedaccounts where email='"+email+"';";
+		ResultSet rs = sqlHandler.performStatement(sql);	
+		try {
+			if(rs.next())
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
