@@ -7,10 +7,6 @@
 	<title>Small Town Ships</title>
 </head>
 <body>
-	<h1>Hello world</h1>
 	
-	<p>
-		The current time is: <%= Main.getTime() %>
-	</p>
 </body>
 </html>
