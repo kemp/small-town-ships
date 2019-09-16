@@ -11,7 +11,7 @@ Armament:
 	Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.
 	Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.
 
-Price Tag: $1.2 billion.
+Price Tag: $1.82 billion.
 
 
 Deutschland Class
@@ -28,7 +28,7 @@ Armament:
 	Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.
 	Torpedoes: 8x535mm
 
-Price Tag: $850 million.
+Price Tag: $1.55 billion.
 
 
 Bismarck Class
@@ -44,4 +44,4 @@ Armament:
 	Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.
 	Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.
 
-Price Tag: $995 million.
+Price Tag: $1.699 billion.
