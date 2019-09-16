@@ -1,0 +1,47 @@
+Iowa-Class
+Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.
+
+Specifications:
+Speed: 33 knots
+Dimensions:
+	Length: 270 meters
+	Beam: 33 meters
+	Draught: 11 meters
+Armament:
+	Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.
+	Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.
+
+Price Tag: $1.82 billion.
+
+
+Deutschland Class
+While the Deutschland class “pocket” battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.
+
+Specifications:
+Speed: 28 knots
+Dimensions:
+	Length: 186 meters
+	Beam: 21.6 meters
+	Draught: 5.8 meters
+Armament:
+	Main: 6x280mm guns distributed evenly in one fore turret and one aft turret.
+	Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.
+	Torpedoes: 8x535mm
+
+Price Tag: $1.55 billion.
+
+
+Bismarck Class
+Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.
+
+Specifications:
+Speed: 29 knots
+Dimensions:
+	Length: 248 meters
+	Beam: 36 meters
+	Draught: 8.5 meters
+Armament:
+	Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.
+	Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.
+
+Price Tag: $1.699 billion.
