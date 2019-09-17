@@ -15,7 +15,12 @@ public class MySQLHandler {
 			e.printStackTrace();
 		}
 	}
-	
+	/*
+	 *  Designed to be called by LoginHandler / Registration page
+	 *  Returns a result set that can be manipulated
+	 *  
+	 *  TODO Secure this via 'protected' in package with classes that need access to it
+	 */
 	public ResultSet performStatement(String sql) {
 		ResultSet rs = null;
 		try {
@@ -26,5 +31,25 @@ public class MySQLHandler {
 		}
 		return rs;
 	}
-	
+	/*
+	 * Utility method, allowing for conversion of verifiedAccounts table to String
+	 */
+	public String verifiedToString(ResultSet rs) {
+		String s = "";
+		try {
+			int columnCount = rs.getMetaData().getColumnCount();
+			while(rs.next()){
+				s = s.concat(rs.getRow()+": ");
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rs.getString(i);
+					s = s.concat("["+value+"] ");
+				}
+				s = s.concat("\n");
+			}
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
