@@ -18,8 +18,7 @@ public class Products {
     	productsList.add(new Product(
 			1, 
 			"Iowa Class", 
-			"<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>\n" + 
-			"<h2 id=\"specifications\">Specifications</h2>\n" + 
+			"<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>\n", 
 			"<ul>\n" + 
 			"<li>Speed: 33 knots</li>\n" + 
 			"<li>Dimensions:<ul>\n" + 
@@ -43,8 +42,7 @@ public class Products {
     	productsList.add(new Product(
 			2, 
 			"Deutschland Class", 
-			"<p>While the Deutschland class “pocket” battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\n" + 
-			"<h2 id=\"specifications\">Specifications</h2>\n" + 
+			"<p>While the Deutschland class “pocket” battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\n", 
 			"<ul>\n" + 
 			"<li>Speed: 28 knots</li>\n" + 
 			"<li>Dimensions:<ul>\n" + 
@@ -69,8 +67,7 @@ public class Products {
     	productsList.add(new Product(
 			3, 
 			"Bismark Class", 
-			"<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>\n" + 
-			"<h2 id=\"specifications\">Specifications</h2>\n" + 
+			"<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>\n", 
 			"<ul>\n" + 
 			"<li>Speed: 29 knots</li>\n" + 
 			"<li>Dimensions:<ul>\n" + 

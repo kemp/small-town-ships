@@ -17,6 +17,10 @@
                 <div class="card-body">
                     <p class="card-text">
                         <div>${ product.description }</div>
+                        <div>
+                            <h2>Specifications</h2>
+                            ${ product.specifications }
+                        </div>
                         <br><strong>Unit price:</strong> ${ product.getFormattedPrice() }
                     </p>
                     <form action="./buy-product?id=${product.id}" method="POST">

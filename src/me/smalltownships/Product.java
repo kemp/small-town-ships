@@ -10,16 +10,19 @@ public class Product {
 	
 	private String description;
 	
+	private String specifications;
+	
 	private double price;
 	
 	private int quantity;
 	
 	private String image;
 	
-	public Product(int id, String name, String description, double price, int quantity, String image) {
+	public Product(int id, String name, String description, String specifications, double price, int quantity, String image) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.specifications = specifications;
 		this.price = price;
 		this.quantity = quantity;
 		this.image = image;
@@ -35,6 +38,10 @@ public class Product {
 	
 	public String getDescription() {
 		return this.description;
+	}
+	
+	public String getSpecifications() {
+		return this.specifications;
 	}
 	
 	public double getPrice() {

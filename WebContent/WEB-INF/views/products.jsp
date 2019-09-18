@@ -21,7 +21,10 @@
                         </a>
                         <div class="card-body">
                             <h5 class="card-title"><%= product.getName() %></h5>
-                            <p class="card-text">Price: <%= product.getFormattedPrice() %></p>
+                            <div class="card-text">
+                                <%= product.getDescription() %>
+                                <p>Price: <%= product.getFormattedPrice() %></p>
+                            </div>
                             <a href="./product?id=<%= product.getId() %>" class="btn btn-info">Open</a>
                         </div>
                     </div>
