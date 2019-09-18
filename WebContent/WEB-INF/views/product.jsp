@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    pageEncoding="UTF-8" import="me.smalltownships.Product"%>
 <!doctype html>
 <html lang="en">
     <jsp:include page="_head.jsp">
@@ -24,9 +23,9 @@
                         <div class="form-group">
                             <label for="quantity">Quantity (${ product.quantity } available): </label>
                             <select class="form-control" id="quantity" name="quantity">
-                                <c:forEach var="i" begin="1" end="${ product.quantity }">
-                                    <option value="${ i }">${ i }</option>
-                                </c:forEach>
+                                <% for (int i = 1; i <= ((Product)request.getAttribute("product")).getQuantity(); i++) { %>
+                                    <option value="<%= i %>"><%= i %></option>
+                                <% } %>
                             </select>
                         </div>
                         <p><strong>Total:</strong> <span id="total">${ product.getFormattedPrice() }</span></p>

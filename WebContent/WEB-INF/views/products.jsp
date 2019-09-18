@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="me.smalltownships.Product" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    pageEncoding="UTF-8" import="me.smalltownships.Product" import="java.util.List" %>
 <!doctype html>
 <html lang="en">
     <jsp:include page="_head.jsp">
@@ -15,16 +14,18 @@
             <h1>Products</h1>
             	
             <div class="card-columns">
-                <c:forEach items="${products}" var="product">
+                <% for (Product product : (List<Product>)request.getAttribute("products")) { %>
                     <div class="card mx-auto mb-2">
-                        <a href="./product?id=${product.id}"><img src="${ product.image }" class="card-img-top" alt="${ product.name }"></a>
+                        <a href="./product?id=<%= product.getId() %>">
+                            <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>">
+                        </a>
                         <div class="card-body">
-                            <h5 class="card-title">${ product.name }</h5>
-                            <p class="card-text">Price: ${ product.getFormattedPrice() }</p>
-                            <a href="./product?id=${product.id}" class="btn btn-info">Open</a>
+                            <h5 class="card-title"><%= product.getName() %></h5>
+                            <p class="card-text">Price: <%= product.getFormattedPrice() %></p>
+                            <a href="./product?id=<%= product.getId() %>" class="btn btn-info">Open</a>
                         </div>
                     </div>
-                </c:forEach>
+                <% } %>
             </div>
         </main>
         

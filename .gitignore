@@ -186,6 +186,3 @@ target/
 
 # End of https://www.gitignore.io/api/java,eclipse,intellij,java-web
 /build/
-
-## Add back jstl
-!/WebContent/WEB-INF/lib/jstl-1.2.jar
