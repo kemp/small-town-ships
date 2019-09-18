@@ -2,7 +2,7 @@ package me.smalltownships;
 
 import java.sql.*;
 
-public class MySQLHandler {
+public class MySQLHandler implements AutoCloseable {
 	
 	Connection con;
 	
@@ -25,6 +25,12 @@ public class MySQLHandler {
 			e.printStackTrace();
 		}
 		return rs;
+	}
+
+	@Override
+	public void close() throws Exception {
+		// Close the database connection
+		con.close();
 	}
 	
 }

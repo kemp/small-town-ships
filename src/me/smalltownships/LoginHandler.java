@@ -3,7 +3,7 @@ package me.smalltownships;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LoginHandler {
+public class LoginHandler implements AutoCloseable {
 	
 	static {
 		try {
@@ -12,6 +12,20 @@ public class LoginHandler {
 			throw new RuntimeException("Cannot find JDBC libraries", e);
 		}
 	}
+	
+	/*
+	 * Database Layout
+	 * Tables: verifiedaccounts, unverifiedaccounts
+	 * 
+	 * verifiedaccounts columns:
+	 *     firstName, lastName, username, password, email, login
+	 *         login is boolean
+	 * unverifiedaccounts columns:
+	 *     firstName, lastName, username, password, email, applicationDate
+	 *         applicationDate inserted with CURDATE() function
+	 *         server can periodically check for entries with an applicationDate
+	 *         that is 2 days less than the current date and remove those entries
+	 */
 
 	// FIXME: Need to know the database layout to write the queries
 	
@@ -45,8 +59,9 @@ public class LoginHandler {
 		String sql = "select * from smalltownships.verifiedaccounts where email='"+email+"';";
 		ResultSet rs = sqlHandler.performStatement(sql);	
 		try {
-			if(rs.next())
-			return true;
+			if(rs.next()) {
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -78,5 +93,11 @@ public class LoginHandler {
 		// TODO: Check if an account with the given username and/or password exists
 		// TODO: Add a new account to the DB with the given username, password and email address
 		return false;
+	}
+
+	@Override
+	public void close() throws Exception {
+		// Close the database connection
+		sqlHandler.close();
 	}
 }
