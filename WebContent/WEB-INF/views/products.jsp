@@ -13,23 +13,27 @@
         <main class="container mt-3">
             <h1>Products</h1>
             	
-            <div class="card-columns">
-                <% for (Product product : (List<Product>)request.getAttribute("products")) { %>
-                    <div class="card mx-auto mb-2">
-                        <a href="./product?id=<%= product.getId() %>">
-                            <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>">
-                        </a>
-                        <div class="card-body">
-                            <h5 class="card-title"><%= product.getName() %></h5>
-                            <div class="card-text">
+            <table class="table">
+                <tbody>
+                    <% for (Product product : (List<Product>)request.getAttribute("products")) { %>
+                        <tr>
+                            <td>
+                                <a href="./product?id=<%= product.getId() %>">
+                                    <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>">
+                                </a>
+                            </td>
+                            <td>
+                                <h2><%= product.getName() %></h2>
                                 <%= product.getDescription() %>
                                 <p>Price: <%= product.getFormattedPrice() %></p>
-                            </div>
-                            <a href="./product?id=<%= product.getId() %>" class="btn btn-info">Open</a>
-                        </div>
-                    </div>
-                <% } %>
-            </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <a href="./product?id=<%= product.getId() %>" class="btn btn-info">Open</a>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </main>
         
         <jsp:include page="_footer.jsp"></jsp:include>
