@@ -13,6 +13,8 @@ import static me.smalltownships.Products.findProductByID;
 
 /**
  * HttpServlet representing an individual Product
+ * 
+ * @author kemp
  */
 @WebServlet("/product")
 public class ProductsShowServlet extends HttpServlet {

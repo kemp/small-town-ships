@@ -3,6 +3,11 @@ package me.smalltownships;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A list of products
+ * 
+ * @author kemp
+ */
 public class Products {
 
 	/**
