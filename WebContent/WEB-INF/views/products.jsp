@@ -11,7 +11,12 @@
         <jsp:include page="_nav.jsp"></jsp:include>
 
         <main class="container mt-3">
-            <h1>Products</h1>
+            <div class="d-flex">
+                <h1 class="mr-auto">Products</h1>
+                
+                <div id="cart"></div>
+            </div>
+            
             	
             <table class="table">
                 <tbody>
@@ -37,5 +42,7 @@
         </main>
         
         <jsp:include page="_footer.jsp"></jsp:include>
+    
+        <script src="cart.js"></script>
     </body>
 </html>
