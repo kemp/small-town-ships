@@ -32,15 +32,22 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-//		LoginHandler loginHandler = new LoginHandler();
+		LoginHandler loginHandler = new LoginHandler();
 		
 		response.sendRedirect("products");
 		
-//		if (loginHandler.tryLogin(username, password)) {
-			
-//		} else {
-//			response.sendRedirect("/"); // Incorrect password
-//		}
+		if (loginHandler.tryLogin(username, password)) {
+				response.sendRedirect("products");
+		} else {
+			response.sendRedirect("/"); // Incorrect password
+		}
+		
+		try {
+			loginHandler.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
