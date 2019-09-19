@@ -8,11 +8,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.Collections;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 /**
  * Generate a web page to verify an email address
@@ -21,9 +23,41 @@ import java.util.TreeMap;
  */
 public class EmailVerifier {
 	
+	static class VerificationPage implements Comparable<VerificationPage> {
+		final String name;
+		final Date date;
+		
+		VerificationPage(String name, String date) {
+			this.name = name;
+			this.date = Date.valueOf(date);
+		}
+		
+		@Override
+		public int compareTo(VerificationPage o) {
+			return name.compareTo(o.name);
+		}
+	}
+	
 	private static final Encoder base64Encode;
 	private static final SecureRandom rand;
-	private static final NavigableMap<String,Date> verificationPages;
+	private static final NavigableSet<VerificationPage> verificationPages;
+	
+	private static final String secureRandAlg;
+	
+	private static final AtomicLong uniqueSeed = new AtomicLong(1);
+	
+	private static long getUniqueSeed() {
+		for (;;) {
+			long current = uniqueSeed.get();
+			long next = current * 181783497276652981L + System.nanoTime();
+			for (int i = 0; i < 256; i++) {
+				next = current * 181783497276652981L + System.nanoTime();
+			}
+			if (uniqueSeed.compareAndSet(current, next)) {
+				return next;
+			}
+		}
+	}
 	
 	static {
 		SecureRandom tmp = null;
@@ -48,17 +82,57 @@ public class EmailVerifier {
 		tmp.setSeed(tmp.generateSeed(256));
 		tmp.setSeed(tmp.nextLong() ^ System.nanoTime() ^ tmp.nextLong());
 		rand = tmp;
-		verificationPages = Collections.synchronizedNavigableMap(new TreeMap<String,Date>());
+		secureRandAlg = rand.getAlgorithm();
+		verificationPages = Collections.synchronizedNavigableSet(new TreeSet<>());
 		base64Encode = Base64.getUrlEncoder().withoutPadding();
 	}
+
+	public static SecureRandom getSecureRandom() {
+		SecureRandom r;
+		try {
+			r = SecureRandom.getInstance(secureRandAlg);
+		} catch (NoSuchAlgorithmException e) {
+			r = new SecureRandom();
+		}
+		r.setSeed(r.generateSeed(256));
+		r.setSeed(r.nextLong() ^ System.nanoTime() ^ r.nextLong());
+		r.setSeed(getUniqueSeed());
+		return r;
+	}
 	
-	public static void verifyAccount(String username) {
-		MySQLHandler sqlHandler = new MySQLHandler();
-		String sql = "get * from smalltownships.unverifiedaccounts where"
-				+ " username='" + username + "';";
-		String sqlDeleteUnverified = "delete from smalltownships.unverifiedaccounts where"
-				+ " username='" + username + "';";
-		
+	/**
+	 * Move the account with the indicated username from unverifiedaccounts to
+	 * verifiedaccounts.
+	 * 
+	 * @param user The username of the account that has been verified
+	 * @return True if the account was moved to the verifiedaccounts table, false otherwise
+	 */
+	public static boolean verifyAccount(String user) {
+		String first, last, pass, email, sql;
+		ResultSet rs;
+		try (MySQLHandler sqlHandler = new MySQLHandler()) {
+			sql = "get firstname, lastname, password, email from "
+					+ "smalltownships.unverifiedaccounts where username='" + user + "';";
+			rs = sqlHandler.performStatement(sql);
+			if (rs.getRow() == 0) {		// No entry found
+				rs.close();
+				return false;
+			}
+			first = rs.getString(1);
+			last = rs.getString(2);
+			pass = rs.getString(3);
+			email = rs.getString(4);
+			rs.close();
+			sql = "delete from smalltownships.unverifiedaccounts where"
+					+ " username='" + user + "';";
+//			sqlHandler.performUpdate(sql);
+			sql = "insert into smalltownships.verifiedaccounts values "
+					+ "("+first+", "+last+", "+user+", "+pass+", "+email+", 0);";
+//			sqlHandler.performUpdate(sql);
+			return true;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**
@@ -67,10 +141,10 @@ public class EmailVerifier {
 	 * 
 	 * @param email The email address to verify
 	 */
-	public static void createVerificationPage(String email, String username)
+	public static void createVerificationPage(String email, String username, String date)
 			throws IOException {
+		VerificationPage page;
 		String pageName;
-		Date pageDate;
 		// Ensure that the address created is unique
 		synchronized (rand) {	// Synchronize to prevent creating one page for two emails
 			byte[] randBytes = new byte[16];	// 128-bit random integer
@@ -78,17 +152,17 @@ public class EmailVerifier {
 				rand.nextBytes(randBytes);
 				// Ensure the encoded string is in UTF-8 format
 				pageName = new String(base64Encode.encode(randBytes), StandardCharsets.UTF_8);
-				pageDate = Date.valueOf(LocalDate.now());
-			} while (verificationPages.putIfAbsent(pageName, pageDate) != null);
+				page = new VerificationPage(pageName, date);
+			} while (!verificationPages.add(page));
 			// pageName now holds a unique, randomly generated, verification page name
 		}
-		File page = null;
+		File fpage = null;
 		try {
 			// Create the JSP web page
 			// TODO: Find out if this path is correct
-			page = new File("WebContent/" + pageName + ".jsp");
-			page.createNewFile();
-			try (FileWriter out = new FileWriter(page)) {
+			fpage = new File("/" + pageName + ".html");
+			fpage.createNewFile();
+			try (FileWriter out = new FileWriter(fpage)) {
 				out.write("<!doctype html>\n");
 				out.write("<html lang=\"en\">\n");
 				out.write("<head>\n");
@@ -101,7 +175,7 @@ public class EmailVerifier {
 				out.write("    <title>Small Town Battleships</title>\n");
 				out.write("  </head>\n");
 				out.write("  <body>\n");
-//					<div class="login">
+				out.write("    <div class=\"login\">\n");
 //				  		<form action="/action_page.php" class="container">
 //				   			<label for="username">Username</label>
 //				   			<br>
@@ -118,10 +192,10 @@ public class EmailVerifier {
 //				</html>
 			}
 		} catch (IOException e) {
-			if (page != null) {
-				page.delete();
+			if (fpage != null) {
+				fpage.delete();
 			}
-			verificationPages.remove(pageName);
+			verificationPages.remove(page);
 			throw e;
 		}
 	}
