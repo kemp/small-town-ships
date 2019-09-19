@@ -55,9 +55,10 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if an account has the email address "email"
 	 */
 	public boolean emailExists(String email) {
-		// Checks within the verified accounts table, this can be changed if necessary
-		String sql = "select * from smalltownships.verifiedaccounts where email='"+email+"';";
-		ResultSet rs = sqlHandler.performStatement(sql);	
+		// Checks within BOTH tables, this can be changed if necessary
+		String sql = "select * from smalltownships.verifiedaccounts where email='"+email+"'"
+				+ " union select * from smalltownships.unverifiedaccounts where email='"+email+"';";
+		ResultSet rs = sqlHandler.queryTable(sql);	
 		try {
 			if(rs.next()) {
 				return true;
@@ -77,7 +78,16 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if an account has the username "user"
 	 */
 	public boolean usernameExists(String user) {
-		// TODO: Query the database for an account with the given username
+		String sql = "select * from smalltownships.verifiedaccounts where username='"+user+"'"
+				+ " union select * from smalltownships.unverifiedaccounts where username='"+user+"';";
+		ResultSet rs = sqlHandler.queryTable(sql);	
+		try {
+			if(rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
@@ -90,9 +100,15 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if a new account was created, false otherwise
 	 */
 	public boolean createNewUser(String user, String password, String email) {
-		// TODO: Check if an account with the given username and/or password exists
-		// TODO: Add a new account to the DB with the given username, password and email address
-		return false;
+		if (usernameExists(user)) {
+			return false;
+		} else if (emailExists(email)) {
+			return false;
+		} else {
+			String sql = "INSERT INTO smalltownships.unverifiedaccounts (username, password, email, applicationDate) "
+					+ "VALUES ('" + user + "', '"+password+"', '"+email+"', CURDATE());";
+	    	return sqlHandler.updateTable(sql);
+		}
 	}
 
 	@Override

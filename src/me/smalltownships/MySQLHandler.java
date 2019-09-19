@@ -9,7 +9,7 @@ public class MySQLHandler implements AutoCloseable {
 	public MySQLHandler() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false", 
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true", 
 					"root", "qwerty");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -21,8 +21,11 @@ public class MySQLHandler implements AutoCloseable {
 	 *  Returns a result set that can be manipulated
 	 *  
 	 *  TODO Secure this via 'protected' in package with classes that need access to it
+	 *  
+	 *  @param SQL string to be executed
+	 *  @return Result set of table that was queried
 	 */
-	public ResultSet performStatement(String sql) {
+	public ResultSet queryTable(String sql) {
 		ResultSet rs = null;
 		try {
 			Statement stmt = con.createStatement();
@@ -34,7 +37,27 @@ public class MySQLHandler implements AutoCloseable {
 	}
 	
 	/**
+	 *  Function for issuing data manipulation statements to database
+	 *  
+	 *  @param String SQL statement that should return nothing
+	 *  @return True if statement executed, false if an exception was thrown
+	 */
+	public boolean updateTable(String sql) {
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(sql);
+			return true;
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
 	 * Utility method, allowing for conversion of verifiedAccounts table to String
+	 * 
+	 * @param ResultSet from the verifiedAccounts table to be converted to string
+	 * @return String representation of table
 	 */
 	public String verifiedToString(ResultSet rs) {
 		String s = "";
