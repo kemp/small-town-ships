@@ -1,0 +1,23 @@
+@CHARSET "ISO-8859-1";
+
+.VerifyMessage
+{
+	width: 1200px;
+	length: 500px;
+	text-align: center;
+	color: 	#C0C0C0;
+	margin: 5% auto;
+	padding: 10px;
+}
+
+h1
+{
+	font-size: 200px;
+	margin: 3% 10%;
+	color: 	#696969
+}
+
+p
+{
+	font-size: 25px;
+}
