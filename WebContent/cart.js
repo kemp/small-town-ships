@@ -82,8 +82,10 @@
 		if (!items[id]) 
 			items[id] = { "quantity": 0, "price": 0 };
 		
-		items[id]["quantity"] += parseInt(quantity) || 0;
-		items[id]["price"] += price;
+		var qty = parseInt(quantity) || 0;
+		
+		items[id]["quantity"] += qty;
+		items[id]["price"] += price * qty;
 				
 		updateItemTotal();
 		
