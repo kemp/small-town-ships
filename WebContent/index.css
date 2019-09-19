@@ -4,7 +4,9 @@ body
 {
 	background-image: url("asdf4.jpg");
 	background-repeat: no-repeat;
-	background-size: auto;
+	background-size: cover;
+	background-position: center;
+	min-height: 100vh;
 }
 
 form
