@@ -19,7 +19,7 @@ form
 }
 
 
-form input[type="email"]
+form input[type="text"]
 {
 	width: 200px;
 	margin-left: 20%;
