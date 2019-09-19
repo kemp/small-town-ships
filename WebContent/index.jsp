@@ -5,17 +5,16 @@
 <html>
 <head>
 
-<jsp::include page="/WEB-INF/views/_head.jsp">
-</jsp::include>
+<jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
 <link rel="stylesheet" href="index.css">
 <title>Small Town Ships</title>
 </head>
 <body>
-	<form action="LoginServlet" method="POST">
+	<form action="login" method="POST">
 		<h1>Login</h1>
 	 	<div class="form-group">
 	    	<label for="username">Username</label>
-	    	<input type="email" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email">
+	    	<input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email">
 		</div>
 		<div class="form-group">
 	    	<label for="password">Password</label>

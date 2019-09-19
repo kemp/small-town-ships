@@ -1,6 +1,7 @@
 package me.smalltownships;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,17 +12,10 @@ import java.sql.*;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet("/Login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Controller() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,32 +32,15 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
-		try
-		{
-			if(username == null)
-			{
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships","root","123456789");
-				Statement query = conn.createStatement();
-				ResultSet rs = query.executeQuery("select username, password from verified accounts");
-				
-				if(rs.next())
-				{
-					response.sendRedirect("Products.jsp");
-				}
-				else
-				{
-					System.out.println("Login Failed");
-				}
-				
-				conn.close();
-			}
-		}
-		catch(Exception ex)
-		{
-			System.out.println("Exception" + ex.getMessage());
-		}
+//		LoginHandler loginHandler = new LoginHandler();
 		
+		response.sendRedirect("products");
+		
+//		if (loginHandler.tryLogin(username, password)) {
+			
+//		} else {
+//			response.sendRedirect("/"); // Incorrect password
+//		}
 	}
 
 }
