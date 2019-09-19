@@ -33,8 +33,6 @@
 	// update the total of the cart
 	function updateItemTotal() {
 		cartTotalEl.innerText = getItemTotal();
-		
-		updateVisibility();
 	}
 	
 	function getItemTotal() {
