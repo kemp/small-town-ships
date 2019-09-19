@@ -1,0 +1,47 @@
+@CHARSET "ISO-8859-1";
+
+body
+{
+	background-image: url("asdf4.jpg");
+	background-repeat: no-repeat;
+	background-size: auto;
+}
+
+form
+{
+	width: 400px;
+	height: 480px;
+	margin: 10% auto;
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 10px;
+	color: white;
+}
+
+.form-group
+{
+	padding: 10% 10% 0% 10%;
+}
+#FirstName
+{
+	width: 300px;
+}
+
+#LastName
+{
+	width: 300px;
+}
+form input[type="email"]
+{
+	width: 300px;
+}
+
+form input[type="password"]
+{
+	width: 300px;
+}
+
+form button
+{
+	float: right;
+	margin-right: 15%;
+}
