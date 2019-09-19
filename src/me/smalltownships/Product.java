@@ -2,6 +2,11 @@ package me.smalltownships;
 
 import java.text.NumberFormat;
 
+/**
+ * An individual product (normally a ship)
+ * 
+ * @author kemp
+ */
 public class Product {
 	
 	private int id;

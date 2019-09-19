@@ -10,6 +10,8 @@ import static me.smalltownships.Products.getProducts;
 
 /**
  * HttpServlet representing a list of products
+ * 
+ * @author kemp
  */
 @WebServlet("/products")
 public class ProductsIndexServlet extends HttpServlet {
