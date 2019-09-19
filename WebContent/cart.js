@@ -30,15 +30,6 @@
 		checkoutButton.addEventListener('click', checkout);
 	}
 	
-	// Update the visibility of the checkout button
-	function updateVisibility() {
-		if (items == null || items.length == 0) {
-			cartEl.style.display = 'none';
-		} else {
-			cartEl.style.display = 'block';
-		}
-	}
-	
 	// update the total of the cart
 	function updateItemTotal() {
 		cartTotalEl.innerText = getItemTotal();
