@@ -47,7 +47,7 @@ public class Products {
     	productsList.add(new Product(
 			2, 
 			"Deutschland Class", 
-			"<p>While the Deutschland class “pocket” battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\n", 
+			"<p>While the Deutschland class \"pocket\" battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\n", 
 			"<ul>\n" + 
 			"<li>Speed: 28 knots</li>\n" + 
 			"<li>Dimensions:<ul>\n" + 
@@ -66,7 +66,7 @@ public class Products {
 			"", 
 			1550000000,
 			7,
-			"https://upload.wikimedia.org/wikipedia/commons/8/8e/Bundesarchiv_DVM_10_Bild-23-61-51%2C_Geschwader_in_Kiellinie.jpg"
+			"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/German_cruiser_Deutschland_in_1935.jpg/600px-German_cruiser_Deutschland_in_1935.jpg"
 		));
     	
     	productsList.add(new Product(
@@ -90,7 +90,7 @@ public class Products {
 			"", 
 			1699000000,
 			20, 
-			"https://img00.deviantart.net/34d7/i/2012/256/9/f/battleship_bismarck_by_rainerkalwitz-d5ejpqd.jpg"
+			"https://upload.wikimedia.org/wikipedia/commons/f/fe/Bundesarchiv_Bild_193-04-1-26%2C_Schlachtschiff_Bismarck.jpg"
 		));
     	
     	return productsList;
