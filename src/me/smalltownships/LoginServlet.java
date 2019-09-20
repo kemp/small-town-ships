@@ -33,11 +33,9 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		
 		LoginHandler loginHandler = new LoginHandler();
-		
-		response.sendRedirect("products");
-		
+				
 		if (loginHandler.tryLogin(username, password)) {
-				response.sendRedirect("products");
+			response.sendRedirect("products");
 		} else {
 			response.sendRedirect("/"); // Incorrect password
 		}
