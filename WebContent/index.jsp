@@ -1,9 +1,11 @@
   <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
+    <jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
 <!DOCTYPE html>
 <html>
     <head>
         <jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
+        <jsp:include page="/WEB-INF/views/_nav.jsp"></jsp:include>
         <link rel="stylesheet" href="index.css">
     </head>
     <body>

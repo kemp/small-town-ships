@@ -19,8 +19,8 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
             <!-- Authentication Links -->
-                <li class="nav-item"><a class="nav-link" href="./Test.jsp">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Register</a></li> <!-- TODO -->
+                <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li> <!-- TODO -->
             </ul>
         </div>
     </div>

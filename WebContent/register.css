@@ -1,6 +1,6 @@
 body
 {
-	background-image: url("asdf5.jpg");
+	background-image: url("asdf4.jpg");
 	background-repeat: no-repeat;
 	background-size: auto;
 }
@@ -20,9 +20,9 @@ body
 {	
 	text-align: center;
 	width: 300px;
-	height: 440px;
-	padding-top: 5%;
-	margin: 10% auto;
+	height: 650px;
+	padding-top: 2%;
+	margin: 5% auto;
 	background-color: rgba(0,0,0,0.5);
 	border-radius: 15px;
 }
@@ -36,20 +36,16 @@ body
 .register input[type="text"]
 {
 	width: 150px;
-	margin: 5px 0px 10px 0px;
+	margin: 0px 0px 10px 0px;
 }
 
 .register input[type="password"]
 {
 	width: 150px;
-	margin: 5px 0px 10px 0px;
+	margin: 0px 0px 10px 0px;
 }
 
-.btn
+form button
 {
-	margin-top: 10px;
-	width: 100px;
-	height: 35px;
-	border: 0;
-	border-radius: 5px;
+	margin-top: 30px;	
 }

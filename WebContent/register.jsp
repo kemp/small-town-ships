@@ -4,7 +4,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/views/_nav.jsp"></jsp:include>
     <link rel="stylesheet" href="register.css">
     <title>Create New Account</title>
   </head>
@@ -62,7 +63,7 @@ String fieldValue(String param) {
         <input type="text" placeholder="Email Address" name="email"
             <%= fieldValue(request.getParameter("ea")) %> required>
         <br>
-        <button type="submit" class="btn">Create Account</button>
+        <button type="submit" class="btn btn-primary">Create Account</button>
       </form>
     </div>
   </body>
