@@ -27,7 +27,21 @@ public class ProductsShowServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// TODO: Ensure the user is authenticated
+		// Ensure the user is authenticated
+		LoginHandler loginHandler = new LoginHandler();
+		
+		if (! loginHandler.isLoggedIn()) {
+			// User is unauthorized, take them to the login page.
+			response.sendRedirect("./");
+			
+			try {
+				loginHandler.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return;
+		}
 		
 		int id;
 		
@@ -55,5 +69,11 @@ public class ProductsShowServlet extends HttpServlet {
         // (Users can not access directly into JSP pages placed in WEB-INF)
         RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/product.jsp");
         dispatcher.forward(request, response);
+        
+        try {
+        	loginHandler.close();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
     }
 }

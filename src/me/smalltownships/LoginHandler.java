@@ -49,6 +49,25 @@ public class LoginHandler implements AutoCloseable {
 	}
 	
 	/**
+	 * Check whether a user is currently logged in or not
+	 * 
+	 * @author kemp
+	 * @return boolean whether a user is logged in
+	 */
+	public boolean isLoggedIn() {
+		String sql = "select * from smalltownships.verifiedaccounts where login=1 limit 1;";
+		ResultSet rs = sqlHandler.queryTable(sql);	
+		try {
+			if(rs.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
 	 * Check whether an account with the given email exists.
 	 * 
 	 * @param email The email address to check for
