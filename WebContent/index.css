@@ -37,6 +37,7 @@ form input[type="password"]
 
 form button
 {
-	float: right;
-	margin-right: 15%;
+	width: 200px;
+	margin: 20px auto;
 }
+

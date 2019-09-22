@@ -19,7 +19,9 @@
     	    	<label for="password">Password</label>
     	    	<input type="password" class="form-control" id="password" placeholder="Password" name="password">
     		</div>
-    		<button type="submit" class="btn btn-primary">Submit</button>
+    		<button type="submit" class="btn btn-primary">Login</button>
+    		<br>
+    		<p>Don't have an account? <a href="./register.jsp">Sign up</a></p>
     	</form>
     </body>
 </html>
