@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" %>
+    pageEncoding="UTF-8" import="me.smalltownships.LoginHandler" %>
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="/small-town-ships">
@@ -18,9 +18,25 @@
             
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
-            <!-- Authentication Links -->
-                <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li> <!-- TODO -->
+                <!-- Authentication Links -->
+                <% 
+                LoginHandler lh = new LoginHandler(); 
+                if (! lh.isLoggedIn()) { 
+                %>
+                    <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li>
+                <% 
+                } else { 
+                %>
+                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out</a></li>
+                <% 
+                }
+                try {
+                    lh.close();   
+                } catch (Exception e) {
+                    e.printStackTrace();   
+                }
+                %>
             </ul>
         </div>
     </div>
