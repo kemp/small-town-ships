@@ -129,6 +129,15 @@ public class LoginHandler implements AutoCloseable {
 	    	return sqlHandler.updateTable(sql);
 		}
 	}
+	
+	/**
+	 * Logout all users (should only be one)
+	 */
+	public void logout() {
+		String sql = "update smalltownships.verifiedaccounts set login=0;";
+		
+		sqlHandler.updateTable(sql);
+	}
 
 	@Override
 	public void close() throws Exception {
