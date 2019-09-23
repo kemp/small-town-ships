@@ -82,6 +82,7 @@ public class Register extends HttpServlet {
 		sql = "SELECT applicationDate FROM smalltownships.unverifiedaccounts WHERE "
 				+ "username = '"+username+"';";
 		rs = handler.queryTable(sql);
+		rs.next();
 		date = rs.getDate(1);
 		rs.close();
 		try {

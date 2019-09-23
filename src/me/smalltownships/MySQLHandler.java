@@ -1,6 +1,10 @@
 package me.smalltownships;
 
+import java.io.File;
 import java.sql.*;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MySQLHandler implements AutoCloseable {
 	
@@ -8,9 +12,12 @@ public class MySQLHandler implements AutoCloseable {
 	
 	public MySQLHandler() {
 		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document config = builder.parse(new File(System.getProperty("catalina.home") + "\\webapps\\SmallTownShipsConfig.xml"));
+			String dbpswd = config.getDocumentElement().getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue();
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true", 
-					"root", "qwerty");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true", "root", dbpswd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

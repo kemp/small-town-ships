@@ -1,0 +1,1 @@
+mysql.exe -u root -p < Smalltownshipsscript.sql
