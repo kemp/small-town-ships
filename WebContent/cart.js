@@ -63,6 +63,8 @@
 		}
 		
 		alert("Thank you for shopping with Small Town Ships.\nYour total is: " + getItemTotal());
+		
+		clearCart();
 	}
 	
 	// Public: add an item to cart given ID and quantity
