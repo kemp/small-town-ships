@@ -2,7 +2,7 @@
 <small_town_ships>
 	<database>
 		<username>root</username>
-		<password>qwerty</password>
+		<password>ROOT_USERS_PASSWORD</password>
 	</database>
 	<email>
 		<username>smalltownships@gmail.com</username>
