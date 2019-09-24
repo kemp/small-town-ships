@@ -43,9 +43,17 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if the username and password match, false otherwise
 	 */
 	public boolean tryLogin(String user, String password) {
-		// TODO: Query database for an account with the given username and password
-		// TODO: If the username and password match an account, set the login flag
-		return true;
+		ResultSet rs = sqlHandler.queryTable("select username, password from verifiedaccounts where username = '" + user + "' AND password = '" + password + "';");
+
+		try {
+			if (rs.next()) {
+				sqlHandler.updateTable("update smalltownships.verifiedaccounts set login=1 where username = '" + user + "';");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**
