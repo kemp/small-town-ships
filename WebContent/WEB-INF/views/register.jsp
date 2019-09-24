@@ -9,17 +9,19 @@
 <title>Small Town Ships</title>
 </head>
 <body>
-<form>
+<form action="<%= request.getContextPath() %>/Register" method="POST">
   <div class="form-group">
   	<h1>Register</h1>
     <label for="FirstName">First Name:</label>
-    <input type="text" class="form-control" id="FirstName">
+    <input type="text" class="form-control" id="FirstName" name="FirstName">
     <label for="LastName">Last Name:</label>
-    <input type="text" class="form-control" id="LastName">
-    <label for="inputEmail4">Email</label>
-    <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-    <label for="inputPassword4">Password</label>
-    <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+    <input type="text" class="form-control" id="LastName" name="LastName">
+    <label for="UserName">User Name:</label>
+    <input type="text" class="form-control" id="UserName" name="UserName">
+    <label for="inputEmail">Email</label>
+    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Email">
+    <label for="inputPassword">Password</label>
+    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
   </div>
   <button type="submit" class="btn btn-primary">Register</button>
 </form>

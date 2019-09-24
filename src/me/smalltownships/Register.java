@@ -24,100 +24,92 @@ public class Register extends HttpServlet {
 		}
 	}
 	
-	private boolean usernameExists(MySQLHandler handler, String user) throws SQLException {
-		ResultSet rs;
-		String sql;
-		int cnt;
-		// Check for matches in the verified users
-		sql = "SELECT COUNT(username) FROM smalltownships.verifiedaccounts "
-				+ "WHERE username = '" + user + "';";
-		rs = handler.queryTable(sql);
-		cnt = (rs.first() ? rs.getInt(1) : 0);
-		rs.close();
-		if (cnt != 0) {
-			// Match found
-			return true;
-		}
-		// Check for matches in the unverified users
-		sql = "SELECT COUNT(username) FROM smalltownships.unverifiedaccounts "
-				+ "WHERE username = '" + user + "';";
-		rs = handler.queryTable(sql);
-		cnt = (rs.first() ? rs.getInt(1) : 0);
-		rs.close();
-		return (cnt != 0);	// Return if a match was found
-	}
-
 	private boolean emailExists(MySQLHandler handler, String email) throws SQLException {
 		String sql;
 		ResultSet rs;
-		int cnt;
+		boolean exists;
 		// Check for matches in the verified users
-		sql = "SELECT COUNT(email) FROM smalltownships.verifiedaccounts "
+		sql = "SELECT * FROM verifiedaccounts "
 				+ "WHERE email = '" + email + "';";
 		rs = handler.queryTable(sql);
-		cnt = (rs.first() ? rs.getInt(1) : 0);
+		exists = rs.first();
 		rs.close();
-		if (cnt != 0) {
+		if (exists) {
 			// Match found
 			return true;
 		}
 		// Check for matches in the unverified users
-		sql = "SELECT COUNT(email) FROM smalltownships.unverifiedaccounts "
+		sql = "SELECT * FROM unverifiedaccounts "
 				+ "WHERE email = '" + email + "';";
 		rs = handler.queryTable(sql);
-		cnt = (rs.first() ? rs.getInt(1) : 0);
+		exists = rs.first();
 		rs.close();
-		return (cnt != 0);	// Return if a match was found
+		return exists;	// Return if a match was found
+	}
+
+	private boolean userExists(MySQLHandler handler, String user) throws SQLException {
+		String sql;
+		ResultSet rs;
+		boolean exists;
+		// Check for matches in the verified users
+		sql = "SELECT * FROM verifiedaccounts "
+				+ "WHERE username = '" + user + "';";
+		rs = handler.queryTable(sql);
+		exists = rs.first();
+		rs.close();
+		if (exists) {
+			// Match found
+			return true;
+		}
+		// Check for matches in the unverified users
+		sql = "SELECT * FROM unverifiedaccounts "
+				+ "WHERE username = '" + user + "';";
+		rs = handler.queryTable(sql);
+		exists = rs.first();
+		rs.close();
+		return exists;	// Return if a match was found
 	}
 	
 	private void createNewAccount(MySQLHandler handler, String firstName, String lastName,
-			String username, String password, String email) throws SQLException {
+			String user, String email, String password) throws SQLException {
 		ResultSet rs;
 		String sql;
 		Date date;
-		sql = "INSERT INTO smalltownships.unverifiedaccounts VALUES "
-				+ "('"+firstName+"','"+lastName+"','"+username+"','"+password+"','"+email
+		sql = "INSERT INTO unverifiedaccounts VALUES "
+				+ "('"+firstName+"','"+lastName+"','"+user+"','"+password+"','"+email
 				+ "', CURDATE());";
 		handler.updateTable(sql);
-		sql = "SELECT applicationDate FROM smalltownships.unverifiedaccounts WHERE "
-				+ "username = '"+username+"';";
+		sql = "SELECT applicationDate FROM unverifiedaccounts WHERE "
+				+ "username = '"+user+"';";
 		rs = handler.queryTable(sql);
 		rs.next();
 		date = rs.getDate(1);
 		rs.close();
 		try {
-			EmailVerifier.createVerificationPage(email, username, date.toString());
-		} catch (IOException e) {
-			throw new RuntimeException("Could not create verification page", e);
+			EmailVerifier.createVerificationPage(email, user, date.toString());
+		} catch (Exception e) {
+			sql = "DELETE FROM unverifiedaccounts WHERE username='"+user+"';";
+			handler.updateTable(sql);
+			throw new RuntimeException("Could not create verification email", e);
 		}
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String firstName, lastName, username, password, confirmPassword, email;
+		String firstName, lastName, username, email, password;
 		
 		try (MySQLHandler sqlHandler = new MySQLHandler()) {
-			firstName = req.getParameter("firstname");
-			lastName = req.getParameter("lastname");
-			username = req.getParameter("username");
-			password = req.getParameter("psw");
-			confirmPassword = req.getParameter("confirm_psw");
-			email = req.getParameter("email");
-			if (usernameExists(sqlHandler, username)) {
-				RequestDispatcher dispatch = req.getRequestDispatcher("register.jsp?err=1&"
-						+ "fn="+firstName+"&ln="+lastName+"&un="+username+"&ea="+email);
-				dispatch.forward(req, resp);
-			} else if (emailExists(sqlHandler, email)) {
-				RequestDispatcher dispatch = req.getRequestDispatcher("register.jsp?err=2&"
-						+ "fn="+firstName+"&ln="+lastName+"&un="+username+"&ea="+email);
-				dispatch.forward(req, resp);
-			} else if (!password.equals(confirmPassword)) {
-				RequestDispatcher dispatch = req.getRequestDispatcher("register.jsp?err=3&"
-						+ "fn="+firstName+"&ln="+lastName+"&un="+username+"&ea="+email);
-				dispatch.forward(req, resp);
+			firstName = req.getParameter("FirstName");
+			lastName = req.getParameter("LastName");
+			username = req.getParameter("UserName");
+			email = req.getParameter("inputEmail");
+			password = req.getParameter("inputPassword");
+			if (emailExists(sqlHandler, email) || userExists(sqlHandler, username)) {
+				RequestDispatcher dispatch = req.getRequestDispatcher("register.jsp");
+				dispatch.forward(req, resp);	// FIXME: Better way to indicate an error?
 			} else {
-				createNewAccount(sqlHandler, firstName, lastName, username, password, email);
+				createNewAccount(sqlHandler, firstName, lastName, username, email, password);
 				RequestDispatcher dispatch = req.getRequestDispatcher("register_success.jsp");
 				dispatch.forward(req, resp);
 			}

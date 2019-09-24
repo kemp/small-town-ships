@@ -5,12 +5,23 @@ body
 	background-size: auto;
 }
 
-.registered
+.verified
 {
 	text-align: center;
 	width: 300px;
 	height: 50px;
-	padding-top: 5%;
+	padding-top: 11px;
+	margin: 10% auto;
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 15px;
+}
+
+.registered
+{
+	text-align: center;
+	width: 400px;
+	height: 85px;
+	padding-top: 20px;
 	margin: 10% auto;
 	background-color: rgba(0,0,0,0.5);
 	border-radius: 15px;

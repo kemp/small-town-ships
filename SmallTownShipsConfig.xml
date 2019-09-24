@@ -2,6 +2,26 @@
 <small_town_ships>
 	<database>
 		<username>root</username>
-		<password>ROOT_PASSWORD</password>
+		<password>qwerty</password>
 	</database>
+	<email>
+		<username>smalltownships@gmail.com</username>
+		<password>ssdgships</password>
+		<property>
+			<key>mail.smtp.host</key>
+			<value>smtp.gmail.com</value>
+		</property>
+		<property>
+			<key>mail.smtp.port</key>
+			<value>465</value>
+		</property>
+		<property>
+			<key>mail.smtp.socketFactory.port</key>
+			<value>465</value>
+		</property>
+		<property>
+			<key>mail.smtp.socketFactory.class</key>
+			<value>javax.net.ssl.SSLSocketFactory</value>
+		</property>
+	</email>
 </small_town_ships>

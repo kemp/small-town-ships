@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="me.smalltownships.EmailVerifier" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,10 +9,14 @@
     <link rel="stylesheet" href="register.css">
   </head>
   <body>
-    <div class="registered">
-      Registration Successful.
-      <br>
-      An Email has been sent to verify your account.
+    <div class="verified">
+      <%
+        if (EmailVerifier.verifyAccount(request.getParameter("id"))) {
+        	out.println("Your account has been verified.");
+        } else {
+        	out.println("Your account could not be verified.");
+        }
+      %>
     </div>
   </body>
 </html>

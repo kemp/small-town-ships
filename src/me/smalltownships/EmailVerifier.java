@@ -2,39 +2,47 @@ package me.smalltownships;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-import java.util.Collections;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.NavigableSet;
 import java.util.Properties;
-import java.util.TreeSet;
+import java.util.Queue;
+import java.util.TreeMap;
 
 /**
  * Generate a web page to verify an email address
@@ -42,52 +50,24 @@ import java.util.TreeSet;
  * @author Joshua Fehrenbach
  */
 public class EmailVerifier {
-	
-	static class VerificationPage implements Comparable<VerificationPage> {
-		final String name;
-		final Date date;
-		final String user;
-		
-		VerificationPage(String name, String date, String user) {
-			this.name = name;
-			this.date = Date.valueOf(date);
-			this.user = user;
-		}
-		
-		@Override
-		public int compareTo(VerificationPage o) {
-			return name.compareTo(o.name);
-		}
 
-		@Override
-		public int hashCode() {
-			return name.hashCode() ^ date.hashCode() ^ user.hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == null || !(obj instanceof String || obj instanceof VerificationPage)) {
-				return false;
-			} else if (obj instanceof String) {
-				return obj.equals(this.name);
-			} else {
-				return ((VerificationPage)obj).name.equals(this.name);
-			}
-		}
-
-		@Override
-		public String toString() {
-			return "[" + name + "," + date + "," + user + "]";
-		}
-	}
-	
-	private static final Encoder base64Encode;
 	private static final SecureRandom rand;
-	private static final NavigableSet<VerificationPage> verificationPages;
-	
 	private static final String secureRandAlg;
+	private static final AtomicLong uniqueSeed;
+
+	private static final Encoder base64Encode;
+	private static final TreeMap<String,VerificationCode> verificationCodes;
+	private static final Queue<Message> emailQueue;
+
+	private static final String serverEmailAccount;
+	private static final String serverEmailPassword;
 	
-	private static final AtomicLong uniqueSeed = new AtomicLong(1);
+	private static final String WEB_ADDRESS;
+	
+	private static final Session EMAIL_SESSION;
+	private static final Thread BACKGROUND_PAGECHECK_THREAD;
+	private static final Thread BACKGROUND_EMAIL_THREAD;
+	private static final Address FROM_ADDRESS;
 	
 	private static long getUniqueSeed() {
 		for (;;) {
@@ -103,34 +83,6 @@ public class EmailVerifier {
 		}
 	}
 	
-	static {
-		SecureRandom tmp = null;
-		try {
-			// Attempt to get a strong RNG
-			tmp = SecureRandom.getInstanceStrong();
-		} catch (NoSuchAlgorithmException e1) {
-			// No strong RNG found, try to find a secure RNG
-			String[] algs = { "PKCS11", "SHA1PRNG", "NativePRNG", "NativePRNGBlocking",
-					"NativePRNGNonBlocking" };
-			for (String alg : algs) {
-				try {
-					tmp = SecureRandom.getInstance(alg);
-					break;
-				} catch (NoSuchAlgorithmException e2) { }
-			}
-			if (tmp == null) {
-				// No secure RNG found, so default to java.util.Random
-				tmp = new SecureRandom();
-			}
-		}
-		tmp.setSeed(tmp.generateSeed(256));
-		tmp.setSeed(tmp.nextLong() ^ System.nanoTime() ^ tmp.nextLong());
-		rand = tmp;
-		secureRandAlg = rand.getAlgorithm();
-		verificationPages = Collections.synchronizedNavigableSet(new TreeSet<>());
-		base64Encode = Base64.getUrlEncoder().withoutPadding();
-	}
-
 	/**
 	 * Get an instance of the strongest available SecureRandom implementation
 	 * 
@@ -156,14 +108,25 @@ public class EmailVerifier {
 	 * @param user The username of the account that has been verified
 	 * @return True if the account was moved to the verifiedaccounts table, false otherwise
 	 */
-	public static boolean verifyAccount(String user) {
-		String first, last, pass, email, sql;
+	public static boolean verifyAccount(String userCode) {
+		String first, last, pass, user, email, sql;
 		ResultSet rs;
+		System.out.println(userCode);
+		if (userCode == null || userCode.isEmpty()) {
+			return false;
+		}
+		synchronized (verificationCodes) {
+			if (!verificationCodes.containsKey(userCode)) {
+				return false;
+			}
+			user = verificationCodes.get(userCode).username;
+		}
+		System.out.println(user);
 		try (MySQLHandler sqlHandler = new MySQLHandler()) {
 			sql = "SELECT firstname, lastname, password, email FROM "
-					+ "smalltownships.unverifiedaccounts where username='" + user + "';";
+					+ "unverifiedaccounts where username='" + user + "';";
 			rs = sqlHandler.queryTable(sql);
-			if (rs.getRow() == 0) {		// No entry found
+			if (!rs.next()) {		// No entry found
 				rs.close();
 				return false;
 			}
@@ -172,11 +135,11 @@ public class EmailVerifier {
 			pass = rs.getString(3);
 			email = rs.getString(4);
 			rs.close();
-			sql = "DELETE FROM smalltownships.unverifiedaccounts WHERE"
+			sql = "DELETE FROM unverifiedaccounts WHERE"
 					+ " username='" + user + "';";
 			sqlHandler.updateTable(sql);
-			sql = "INSERT INTO smalltownships.verifiedaccounts VALUES "
-					+ "("+first+", "+last+", "+user+", "+pass+", "+email+", 0);";
+			sql = "INSERT INTO verifiedaccounts VALUES "
+					+ "('"+first+"','"+last+"','"+user+"','"+pass+"','"+email+"', 0);";
 			sqlHandler.updateTable(sql);
 			return true;
 		} catch (SQLException e) {
@@ -190,75 +153,181 @@ public class EmailVerifier {
 	 * 
 	 * @param email The email address to verify
 	 */
-	public static void createVerificationPage(String email, String username, String date)
+	public static void createVerificationPage(String email, String user, String date)
 			throws IOException {
-		VerificationPage page;
-		String pageName;
+		VerificationCode page;
 		// Ensure that the address created is unique
-		synchronized (verificationPages) {
-			// Synchronize to prevent creating one page for two emails
+		synchronized (verificationCodes) {
+			String code;
 			byte[] randBytes = new byte[16];	// 128-bit random integer
 			do {
 				rand.nextBytes(randBytes);
 				// Ensure the encoded string is in UTF-8 format
-				pageName = new String(base64Encode.encode(randBytes), StandardCharsets.UTF_8);
-				pageName = "/" + pageName + ".jsp";
-				page = new VerificationPage(pageName, date, username);
-			} while (!verificationPages.add(page));		// attempt to cache page
+				code = new String(base64Encode.encode(randBytes), StandardCharsets.UTF_8);
+				page = new VerificationCode(code, user, date);
+			} while (verificationCodes.containsKey(code));
 			// Now have a unique page
+			verificationCodes.put(code, page);
 		}
-		File fpage = null;
 		try {
-			// Create the JSP web page
-			// TODO: Find out if this path is correct
-			fpage = new File("/" + pageName + ".jsp");
-			fpage.createNewFile();
-			try (FileWriter out = new FileWriter(fpage)) {
-				out.write(PAGE_HEADER);
-				out.write(username);
-				out.write(PAGE_FOOTER);
+			// Create the email
+			Message msg = new MimeMessage(EMAIL_SESSION);
+			// Set the sender
+			msg.setFrom(FROM_ADDRESS);
+			// Set the recipient
+			msg.setRecipient(Message.RecipientType.TO,
+					new InternetAddress(email));
+			// Set the subject
+			msg.setSubject("Small Town Ships Account Verification");
+			// Set the contents of the email (in HTML format)
+			msg.setDataHandler(new DataHandler(new HTMLDataSource(
+				"<h1>Thank you for registering with " +
+				"Small Town Ships!</h1><br><h3>Please <a href=\"" +
+				WEB_ADDRESS + "?id=" + page.code + "\">" +
+				"click here</a> to verify your account.</h3>")));
+			// Save the message
+			msg.saveChanges();
+			// Add the message to the queue
+			synchronized (emailQueue) {
+				emailQueue.add(msg);
+				emailQueue.notifyAll();
 			}
-		} catch (IOException e) {
-			if (fpage != null) {
-				fpage.delete();
+		} catch (MessagingException e) {
+			synchronized (verificationCodes) {
+				verificationCodes.remove(page.code);
 			}
-			verificationPages.remove(page);
-			throw e;
+			throw new RuntimeException(e);
 		}
-		sendVerificationEmail(email, username, pageName);
 	}
 	
-	private static final String PAGE_HEADER =
-		"<%@ page language=\"java\" contentType=\"test/html; charset=UTF-8\"\n" +
-		"  pageEncoding=\"UTF-8\" %>\n" +
-		"<%@ page import=\"me.smalltownships.EmailVerifier\" %>\n" +
-		"<!DOCTYPE html>\n" +
-		"<html lang=\"en\">\n" +
-		"<head>\n" +
-		"  <!-- Required meta tags -->\n" +
-		"    <meta charset=\"utf-8\">\n" +
-		"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1,\n" +
-		"            shrink-to-fit=no\">\n" +
-		"    <!-- Bootstrap CSS -->\n" +
-		"    <link rel=\"stylesheet\" href=\"register.css\">\n" +
-		"    <title>Small Town Battleships</title>\n" +
-		"  </head>\n" +
-		"  <body>\n" +
-		"    <div class=\"register\">\n" +
-		"      Your Account has been Verified\n" +
-		"    </div>\n" +
-		"  </body>\n" +
-		"<% EmailVerifier.verifyAccount(";
-	
-	private static final String PAGE_FOOTER = "); %>\n</html>\n";
-
 	static {
-		System.setProperty("mail.smtp.host", "smtp.gmail.com");
-		System.setProperty("mail.smtp.port", "587");
-		System.setProperty("mail.smtp.auth", "true");
-        System.setProperty("mail.smtp.starttls.enable", "true");
+		/***** SecureRandom Setup *****/
+		SecureRandom tmp = null;
+		try {
+			// Attempt to get a strong RNG
+			tmp = SecureRandom.getInstanceStrong();
+		} catch (NoSuchAlgorithmException e1) {
+			// No strong RNG found, try to find a secure RNG
+			String[] algs = { "PKCS11", "SHA1PRNG", "NativePRNG", "NativePRNGBlocking",
+					"NativePRNGNonBlocking" };
+			for (String alg : algs) {
+				try {
+					tmp = SecureRandom.getInstance(alg);
+					break;
+				} catch (NoSuchAlgorithmException e2) { }
+			}
+			if (tmp == null) {
+				// No preferred SecureRandom instance found, so use default
+				tmp = new SecureRandom();
+			}
+		}
+		rand = tmp;
+		secureRandAlg = rand.getAlgorithm();
+		uniqueSeed = new AtomicLong(System.nanoTime()*494852194791354853L + Runtime.getRuntime().freeMemory());
+		rand.setSeed(rand.generateSeed(16));
+		rand.setSeed(rand.nextLong() ^ getUniqueSeed() ^ rand.nextLong());
+		
+		/***** Verification Setup *****/
+		verificationCodes = new TreeMap<>();
+		base64Encode = Base64.getUrlEncoder().withoutPadding();
+		emailQueue = new LinkedList<>();
+		
+		/***** Email Setup *****/
+		// Retrieve the email account's username, password, and SMTP properties from the
+		// config file
+		String username, password;
+		String xmlPath = System.getProperty("catalina.home") +
+				"\\webapps\\SmallTownShipsConfig.xml";
+		try {
+			// Open the config file
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(new File(xmlPath));
+			Element root = doc.getDocumentElement();
+			root.normalize();
+			// Extract email config
+			Element node = (Element) root.getElementsByTagName("email").item(0);
+			// Get account name
+			username = node.getElementsByTagName("username").item(0).getTextContent();
+			// Get account password
+			password = node.getElementsByTagName("password").item(0).getTextContent();
+			// Get SMTP settings
+			NodeList props = node.getElementsByTagName("property");
+			// Parse SMTP settings
+			for (int i = 0; i < props.getLength(); i++) {
+				Element e = (Element) props.item(i);
+				String key = e.getElementsByTagName("key").item(0).getTextContent();
+				String value = e.getElementsByTagName("value").item(0).getTextContent();
+				System.setProperty(key, value);
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			throw new RuntimeException(e);
+		}
+		serverEmailAccount = username;
+		serverEmailPassword = password;
+		WEB_ADDRESS = "http://localhost:8080/small-town-ships/verify.jsp";
+
+		/***** Background Process Setup *****/
+		Properties props = System.getProperties();
+		Authenticator auth = new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(serverEmailAccount, serverEmailPassword);
+			}
+		};
+		Address from;
+		try {
+			from = new InternetAddress(username);
+		} catch (AddressException e) {
+			throw new RuntimeException(e);
+		}
+		EMAIL_SESSION = Session.getInstance(props, auth);
+		FROM_ADDRESS = from;
+		BACKGROUND_PAGECHECK_THREAD = new PageChecker();
+		BACKGROUND_EMAIL_THREAD = new Emailer();
+		BACKGROUND_PAGECHECK_THREAD.start();
+		BACKGROUND_EMAIL_THREAD.start();
 	}
-	
+
+	private static class VerificationCode implements Comparable<VerificationCode> {
+		
+		final String code;
+		final String username;
+		final Date date;
+		
+		VerificationCode(String code, String username, Date date) {
+			this.code = code;
+			this.username = username;
+			this.date = date;
+		}
+		
+		VerificationCode(String code, String username, String date) {
+			this(code, username, Date.valueOf(date));
+		}
+		
+		@Override
+		public int compareTo(VerificationCode o) {
+			return code.compareTo(o.code);
+		}
+
+		@Override
+		public int hashCode() {
+			return code.hashCode() ^ username.hashCode() ^ date.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null || !(obj instanceof VerificationCode)) {
+				return false;
+			} else {
+				return ((VerificationCode)obj).code.equals(this.code);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "[" + code + "," + username + "," + date.toString() + "]";
+		}
+	}
+
 	private static class HTMLDataSource implements DataSource {
 		private String html;
 		
@@ -290,96 +359,88 @@ public class EmailVerifier {
 		}
 	}
 	
-	private static final String serverEmailAccount = "???@gmail.com";
-	private static final String serverEmailPassword = "password";
-	
-	/** TODO: find what this should actually be */
-	private static final String WEB_ADDRESS = "http://localhost:8080/small-town-ships";
-	
-	/**
-	 * Send a verification email
-	 * 
-	 * @param email Email address to send to
-	 * @param username User's username
-	 * @param path Verification page path
-	 */
-	public static void sendVerificationEmail(String email, String username, String path) {
-		Properties p = System.getProperties();
+	private static class PageChecker extends Thread {
 		
-		Session s = Session.getInstance(p, new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(serverEmailAccount, serverEmailPassword);
-			}
-		});
-		
-		try {
-			Message msg = new MimeMessage(s);
-			try {
-				msg.setFrom(new InternetAddress(serverEmailAccount, "Small Town Ships"));
-			} catch (UnsupportedEncodingException e) {
-				// Never going to happen
-				throw new RuntimeException(e);
-			}
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-			msg.setSubject("Small Town Ships Account Verification");
-			msg.setDataHandler(new DataHandler(new HTMLDataSource(
-				"<h1>Thank you " + username + " for registering with " +
-				"Small Town Ships!</h1><br><h3>Please <a href=\"" +
-				WEB_ADDRESS + path + "\">" +
-				"click here</a> to verify your account.</h3>")));
-			
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			throw new RuntimeException("Verification Message Exception", e);
-		}
-	}
-	
-	private static final Thread BACKGROUND_PAGECHECK_THREAD;
-	
-	private static class PageChecker implements Runnable {
-		
-		public void run() {
-			while (true) {
-				// Remove all old pages and users that took too long to verify
-				synchronized (verificationPages) {
-					try (MySQLHandler handler = new MySQLHandler()) {
-						Date date = Date.valueOf(LocalDate.now().minusDays(2));
-						ArrayList<VerificationPage> pages = new ArrayList<>();
-						// Get all pages older than 2 days
-						verificationPages.forEach((page) -> {
-							if (date.compareTo(page.date) > 0) {
-								pages.add(page);
-							}
-						});
-						// Erase old pages, removing unverified users if they have no open
-						// verification pages
-						pages.forEach((page) -> {
-							verificationPages.remove(page);	// remove old page from cache
-							new File(page.name).delete();	// delete old page
-							if (verificationPages.stream().filter(
-									(p) -> p.user.equals(page.user)).count() == 0) {
-								// If no verification pages are open for the user, remove the
-								// user from the unverified table
-								handler.updateTable(
-										"DELETE FROM smalltownships.unverifiedaccounts WHERE"
-										+ " username='" + page.user + "';");
-							}
+		private void removeOldPages() {
+			// Block creating new pages while removing the old pages
+			synchronized (verificationCodes) {
+				Date date = Date.valueOf(LocalDate.now().minusDays(2));
+				ArrayList<VerificationCode> oldCodes = new ArrayList<>();
+				// Get all of the old codes
+				verificationCodes.forEach((code, verificationCode) -> {
+					if (date.compareTo(verificationCode.date) > 0) {
+						oldCodes.add(verificationCode);
+					}
+				});
+				if (!oldCodes.isEmpty()) {
+					try (MySQLHandler sqlHandler = new MySQLHandler()) {
+						// Remove the old codes from the cache
+						oldCodes.forEach((code) -> {
+							verificationCodes.remove(code.code);
+							String sql = "DELETE FROM smalltownships.unverifiedaccounts WHERE"
+									+ " username='" + code.username + "';";
+							sqlHandler.updateTable(sql);
 						});
 					} catch (SQLException e) {
-						e.printStackTrace();
+						throw new RuntimeException(e);
 					}
 				}
+			}
+		}
+		
+		public void run() {
+			// endless loop, because this thread will always be running
+			while (true) {
+				// Remove all old pages and users that took too long to verify
+				removeOldPages();
 				try {
 					TimeUnit.HOURS.sleep(1);	// Make this thread sleep for 1 hour
 				} catch (InterruptedException e) {
-					// Don't care if we get interrupted, just means an early check
+					// If we get interrupted, exit the endless loop
+					break;
 				}
 			}
 		}
 	}
 	
-	static {
-		BACKGROUND_PAGECHECK_THREAD = new Thread(new PageChecker());
-		BACKGROUND_PAGECHECK_THREAD.start();
+	private static class Emailer extends Thread {
+
+		@Override
+		public void run() {
+			LinkedList<Message> messages = new LinkedList<>();
+			// endless loop, because this thread will always be running
+			while (true) {
+				// Pull all pending messages from the queue
+				synchronized (emailQueue) {
+					while (!emailQueue.isEmpty()) {
+						messages.add(emailQueue.poll());
+					}
+					// Check whether anything was read
+					if (messages.isEmpty()) {
+						try {
+							// Make this thread wait for at least 10 seconds
+							emailQueue.wait(10000);	// 10000ms = 10s
+						} catch (InterruptedException e) { }
+						continue;
+					}
+				}
+				// Send the messages
+				try {
+					// Connect to SMTP server
+					Transport t = EMAIL_SESSION.getTransport();
+					t.connect(serverEmailAccount, serverEmailPassword);
+					do {
+						// Send individual messages
+						Message msg = messages.poll();
+						t.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
+					} while (!messages.isEmpty());
+					// Close SMTP server connection
+					t.close();
+				} catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
+
 }
