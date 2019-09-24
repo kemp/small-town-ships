@@ -28,7 +28,7 @@
                 <% 
                 } else { 
                 %>
-                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= lh.loggedInUserName() %>)</a></li>
                 <% 
                 }
                 try {

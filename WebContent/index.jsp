@@ -1,14 +1,29 @@
-  <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" %>
-    <jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="me.smalltownships.LoginHandler" %>
+<%
+
+LoginHandler loginHandler = new LoginHandler();
+
+if (loginHandler.isLoggedIn()) {
+    response.sendRedirect("products");
+}
+
+try {
+    loginHandler.close();
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+%>
 <!DOCTYPE html>
 <html>
     <head>
         <jsp:include page="/WEB-INF/views/_head.jsp"></jsp:include>
-        <jsp:include page="/WEB-INF/views/_nav.jsp"></jsp:include>
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
+        <jsp:include page="/WEB-INF/views/_nav.jsp"></jsp:include>
+    
     	<form action="login" method="POST">
     		<h1>Login</h1>
     	 	<div class="form-group">

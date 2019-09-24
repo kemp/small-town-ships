@@ -43,9 +43,17 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if the username and password match, false otherwise
 	 */
 	public boolean tryLogin(String user, String password) {
-		// TODO: Query database for an account with the given username and password
-		// TODO: If the username and password match an account, set the login flag
-		return true;
+		ResultSet rs = sqlHandler.queryTable("select username, password from verifiedaccounts where username = '" + user + "' AND password = '" + password + "';");
+
+		try {
+			if (rs.next()) {
+				sqlHandler.updateTable("update smalltownships.verifiedaccounts set login=1 where username = '" + user + "';");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**
@@ -65,6 +73,30 @@ public class LoginHandler implements AutoCloseable {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	/**
+	 * Get the name of the currently logged in user
+	 * 
+	 * @author kemp
+	 * @return boolean whether a user is logged in
+	 */
+	public String loggedInUserName() {
+		if (!this.isLoggedIn()) {
+			return null;
+		}
+		
+		String sql = "select firstName,lastName from smalltownships.verifiedaccounts where login=1 limit 1;";
+		ResultSet rs = sqlHandler.queryTable(sql);	
+		
+		try {
+			if(rs.next()) {
+				return rs.getString("firstName") + " " + rs.getString("lastName");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
