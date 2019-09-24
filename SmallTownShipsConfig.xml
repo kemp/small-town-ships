@@ -8,12 +8,20 @@
 		<username>smalltownships@gmail.com</username>
 		<password>ssdgships</password>
 		<property>
+			<key>mail.transport.protocol</key>
+			<value>smtp</value>
+		</property>
+		<property>
 			<key>mail.smtp.host</key>
 			<value>smtp.gmail.com</value>
 		</property>
 		<property>
 			<key>mail.smtp.port</key>
 			<value>465</value>
+		</property>
+		<property>
+			<key>mail.smtp.auth</key>
+			<value>true</value>
 		</property>
 		<property>
 			<key>mail.smtp.socketFactory.port</key>
