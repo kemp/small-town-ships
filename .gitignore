@@ -186,5 +186,5 @@ target/
 # End of https://www.gitignore.io/api/java,eclipse,intellij,java-web
 /build/
 
-
-!WebContent/WEB-INF/lib/mysql-connector-java.jar
+# Jar libraries for the project
+!WebContent/WEB-INF/lib/*
