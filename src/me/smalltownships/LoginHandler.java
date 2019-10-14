@@ -7,7 +7,7 @@ public class LoginHandler implements AutoCloseable {
 	
 	static {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Cannot find JDBC libraries", e);
 		}
