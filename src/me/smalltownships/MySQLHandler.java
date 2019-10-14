@@ -17,7 +17,7 @@ public class MySQLHandler implements AutoCloseable {
 			Document config = builder.parse(new File(System.getProperty("catalina.home") + File.separator + "webapps" + File.separator + "SmallTownShipsConfig.xml"));
 			String dbpswd = config.getDocumentElement().getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue();
 			
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", dbpswd);
 		} catch (Exception e) {
 			e.printStackTrace();
