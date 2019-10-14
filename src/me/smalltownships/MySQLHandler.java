@@ -14,7 +14,7 @@ public class MySQLHandler implements AutoCloseable {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document config = builder.parse(new File(System.getProperty("catalina.home") + "\\webapps\\SmallTownShipsConfig.xml"));
+			Document config = builder.parse(new File(System.getProperty("catalina.home") + File.separator + "webapps" + File.separator + "SmallTownShipsConfig.xml"));
 			String dbpswd = config.getDocumentElement().getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue();
 			
 			Class.forName("com.mysql.jdbc.Driver");
