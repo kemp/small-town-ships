@@ -14,6 +14,7 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="./inventorymanagement">Inventory</a></li>
             </ul>
             
             <!-- Right Side Of Navbar -->
@@ -28,6 +29,7 @@
                 <% 
                 } else { 
                 %>
+          
                     <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= lh.loggedInUserName() %>)</a></li>
                 <% 
                 }
