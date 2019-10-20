@@ -25,7 +25,7 @@
                 if (! lh.isLoggedIn()) { 
                 %>
                     <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./WebContent/WEB-INF/views/register.jsp">Register</a></li>
                 <% 
                 } else { 
                 %>
