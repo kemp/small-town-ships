@@ -74,6 +74,34 @@ public class LoginHandler implements AutoCloseable {
 		}
 		return false;
 	}
+	/*
+	 * Check if the user is an admin
+	 */
+	public boolean isAdmin()
+	{
+		
+		String sql = "select permission from smalltownships.verifiedaccounts where login=1 limit 1;";
+		ResultSet rs = sqlHandler.queryTable(sql);
+		
+		try {
+			/*rs.next();
+			String permissionlvl = rs.getString("permission");
+			System.out.println(permissionlvl);
+			if(permissionlvl == "0") 
+			{
+				return true;
+			}*/
+			if(rs.next())
+			{
+				int i = Integer.parseInt(rs.getString("permission"));
+				if(i == 0) 
+					return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	/**
 	 * Get the name of the currently logged in user

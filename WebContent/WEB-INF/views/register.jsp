@@ -13,15 +13,15 @@
   <div class="form-group">
   	<h1>Register</h1>
     <label for="FirstName">First Name:</label>
-    <input type="text" class="form-control" id="FirstName" name="FirstName">
+    <input type="text" class="form-control" id="FirstName" name="FirstName" required="required" >
     <label for="LastName">Last Name:</label>
-    <input type="text" class="form-control" id="LastName" name="LastName">
+    <input type="text" class="form-control" id="LastName" name="LastName" required="required">
     <label for="UserName">User Name:</label>
-    <input type="text" class="form-control" id="UserName" name="UserName">
+    <input type="text" class="form-control" id="UserName" name="UserName" required="required">
     <label for="inputEmail">Email</label>
-    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Email">
+    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Email" required="required">
     <label for="inputPassword">Password</label>
-    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" required="required" 	>
   </div>
   <button type="submit" class="btn btn-primary">Register</button>
 </form>

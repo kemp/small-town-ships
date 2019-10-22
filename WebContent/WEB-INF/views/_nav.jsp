@@ -13,24 +13,40 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
-                <li class="nav-item"><a class="nav-link" href="./inventorymanagement">Inventory</a></li>
+                <% 
+                LoginHandler lh = new LoginHandler(); 
+                if (lh.isAdmin()) { 
+                %>
+                	<li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
+                	<li class="nav-item"><a class="nav-link" href="./inventory">Inventory</a></li>
+                <% 
+                } else { 
+                %>          
+                    <li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
+                <% 
+                }
+                try {
+                    lh.close();   
+                } catch (Exception e) {
+                    e.printStackTrace();   
+                }
+                %>
             </ul>
             
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
                 <% 
-                LoginHandler lh = new LoginHandler(); 
-                if (! lh.isLoggedIn()) { 
+                LoginHandler lh1 = new LoginHandler(); 
+                if (! lh1.isLoggedIn()) { 
                 %>
                     <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./WebContent/WEB-INF/views/register.jsp">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li>
                 <% 
                 } else { 
                 %>
           
-                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= lh.loggedInUserName() %>)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= lh1.loggedInUserName() %>)</a></li>
                 <% 
                 }
                 try {

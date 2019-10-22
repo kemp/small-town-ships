@@ -19,9 +19,14 @@ public class MySQLHandler implements AutoCloseable {
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", dbpswd);
+			if(con == null)
+			{
+				System.out.println("Not connected to database");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
