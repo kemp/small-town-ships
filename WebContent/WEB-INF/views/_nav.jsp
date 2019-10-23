@@ -13,24 +13,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <% 
-                LoginHandler lh = new LoginHandler(); 
-                if (lh.isAdmin()) { 
-                %>
+                <% if (new LoginHandler()).isAdmin()) { %>
                 	<li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
                 	<li class="nav-item"><a class="nav-link" href="./inventory">Inventory</a></li>
-                <% 
-                } else { 
-                %>          
+                <% } else { %>          
                     <li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
-                <% 
-                }
-                try {
-                    lh.close();   
-                } catch (Exception e) {
-                    e.printStackTrace();   
-                }
-                %>
+                <% } %>
             </ul>
             
             <!-- Right Side Of Navbar -->

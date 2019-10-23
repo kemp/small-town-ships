@@ -373,17 +373,14 @@ public class EmailVerifier {
 					}
 				});
 				if (!oldCodes.isEmpty()) {
-					try (MySQLHandler sqlHandler = new MySQLHandler()) {
-						// Remove the old codes from the cache
-						oldCodes.forEach((code) -> {
-							verificationCodes.remove(code.code);
-							String sql = "DELETE FROM smalltownships.unverifiedaccounts WHERE"
-									+ " username='" + code.username + "';";
-							sqlHandler.updateTable(sql);
-						});
-					} catch (SQLException e) {
-						throw new RuntimeException(e);
-					}
+					MySQLHandler sqlHandler = new MySQLHandler();
+					// Remove the old codes from the cache
+					oldCodes.forEach((code) -> {
+						verificationCodes.remove(code.code);
+						String sql = "DELETE FROM smalltownships.unverifiedaccounts WHERE"
+								+ " username='" + code.username + "';";
+						sqlHandler.updateTable(sql);
+					});
 				}
 			}
 		}

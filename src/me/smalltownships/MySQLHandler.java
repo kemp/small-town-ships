@@ -92,9 +92,15 @@ public class MySQLHandler implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws SQLException {
+	public void close() {
 		// Close the database connection
-		con.close();
+		// https://stackoverflow.com/a/249149
+		if (con != null) {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}			
+		}
 	}
-	
 }
