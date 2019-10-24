@@ -40,14 +40,14 @@ body
 .register label
 {
 	font-family: "Times New Roman", Times, serif;
-	font-size: 20px;
+	font-size: 30px;
 	font-weight: bold;
 	color: white;
 }
 .register input[type="text"]
 {
 	width: 150px;
-	margin: 0px 0px 10px 0px;
+	margin: 0px 20px 10px 20px;
 }
 
 .register input[type="password"]
@@ -58,5 +58,6 @@ body
 
 form button
 {
-	margin-top: 30px;	
+	margin-top: 30px;
+	width: 150px	
 }
