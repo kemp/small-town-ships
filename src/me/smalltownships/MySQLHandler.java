@@ -38,33 +38,54 @@ public class MySQLHandler implements AutoCloseable {
 	 *  @param SQL string to be executed
 	 *  @return Result set of table that was queried
 	 */
-	public ResultSet queryTable(String sql) {
+//	public ResultSet queryTable(String sql) {
+//		ResultSet rs = null;
+//		try {
+//			Statement stmt = con.createStatement();
+//			return stmt.executeQuery(sql);
+//			} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return rs;
+//	}
+	public ResultSet callProcedure(String procedureName) {
 		ResultSet rs = null;
+		String sql = "{CALL "+procedureName+"}";
 		try {
-			Statement stmt = con.createStatement();
-			return stmt.executeQuery(sql);
-			} catch (Exception e) {
-			e.printStackTrace();
-		}
+			CallableStatement stmt = con.prepareCall(sql);
+			rs = stmt.executeQuery();
+		} catch (SQLException e) {e.printStackTrace();}
 		return rs;
 	}
-	
+	public ResultSet callProcedure(String procedureName, int arg, String[] args) {
+		ResultSet rs = null;
+		String sql = "{ CALL "+procedureName+" }";
+		//System.out.println(sql);
+		try {
+			CallableStatement stmt = con.prepareCall(sql);
+			for (int i = 1; i <= arg; i++) {
+				stmt.setString(i, args[i-1]);
+			}
+			rs = stmt.executeQuery();
+		} catch (SQLException e) {e.printStackTrace();}
+		return rs;
+	}
 	/**
 	 *  Function for issuing data manipulation statements to database
 	 *  
 	 *  @param String SQL statement that should return nothing
 	 *  @return True if statement executed, false if an exception was thrown
 	 */
-	public boolean updateTable(String sql) {
-		try {
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(sql);
-			return true;
-			} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+//	public boolean updateTable(String sql) {
+//		try {
+//			Statement stmt = con.createStatement();
+//			stmt.executeUpdate(sql);
+//			return true;
+//			} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return false;
+//	}
 	
 	/**
 	 * Utility method, allowing for conversion of verifiedAccounts table to String

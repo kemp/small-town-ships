@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `smalltownships` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `smalltownships`;
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: smalltownships
@@ -154,7 +152,7 @@ CREATE TABLE `verifiedaccounts` (
 
 LOCK TABLES `verifiedaccounts` WRITE;
 /*!40000 ALTER TABLE `verifiedaccounts` DISABLE KEYS */;
-INSERT INTO `verifiedaccounts` VALUES (NULL,NULL,'manager','ims','',0,01);
+INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',0,01);
 /*!40000 ALTER TABLE `verifiedaccounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,14 +218,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_Unverified_User`(in uname varchar(20), in pass varchar(25), in address varchar(60))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_Unverified_User`(in fName varchar(20), in lName varchar(30), in uname varchar(20), in pass varchar(25), in address varchar(60))
 BEGIN
 -- Adds user to unverifiedaccounts table
 insert into 
 	smalltownships.unverifiedaccounts
-    (username, password, email, applicationDate)
 VALUES
-	(uname, pass, address, curdate());
+	(fName, lName, uname, pass, address, curdate());
+select * from smalltownships.unverifiedaccounts where username = uname;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -432,10 +430,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Search_Unverified_User`(in uname va
 BEGIN
 -- used to select data from unverifiedaccounts table for verification purposes
 select
-	firstName,
-    lastName, 
-    password, 
-    email
+	*
 from
 	smalltownships.unverifiedaccounts
 where
@@ -654,4 +649,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-24 16:04:42
+-- Dump completed on 2019-10-24 19:11:28

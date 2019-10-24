@@ -18,7 +18,7 @@ public class LoginHandler implements AutoCloseable {
 	 * Tables: verifiedaccounts, unverifiedaccounts
 	 * 
 	 * verifiedaccounts columns:
-	 *     firstName, lastName, username, password, email, login
+	 *     firstName, lastName, username, password, email, login, permission
 	 *         login is boolean
 	 * unverifiedaccounts columns:
 	 *     firstName, lastName, username, password, email, applicationDate
@@ -26,8 +26,6 @@ public class LoginHandler implements AutoCloseable {
 	 *         server can periodically check for entries with an applicationDate
 	 *         that is 2 days less than the current date and remove those entries
 	 */
-
-	// FIXME: Need to know the database layout to write the queries
 	
 	private MySQLHandler sqlHandler;
 	
@@ -43,11 +41,11 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if the username and password match, false otherwise
 	 */
 	public boolean tryLogin(String user, String password) {
-		ResultSet rs = sqlHandler.queryTable("select username, password from verifiedaccounts where username = '" + user + "' AND password = '" + password + "';");
+		ResultSet rs = sqlHandler.callProcedure("Try_Login(?,?)", 2, new String[] {user, password});
 
 		try {
 			if (rs.next()) {
-				sqlHandler.updateTable("update smalltownships.verifiedaccounts set login=1 where username = '" + user + "';");
+				sqlHandler.callProcedure("Update_Login(?,?)", 2, new String[] {user, "1"});
 				return true;
 			}
 		} catch (SQLException e) {
@@ -63,8 +61,7 @@ public class LoginHandler implements AutoCloseable {
 	 * @return boolean whether a user is logged in
 	 */
 	public boolean isLoggedIn() {
-		String sql = "select * from smalltownships.verifiedaccounts where login=1 limit 1;";
-		ResultSet rs = sqlHandler.queryTable(sql);	
+		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 		try {
 			if(rs.next()) {
 				return true;
@@ -79,10 +76,7 @@ public class LoginHandler implements AutoCloseable {
 	 */
 	public boolean isAdmin()
 	{
-		
-		String sql = "select permission from smalltownships.verifiedaccounts where login=1 limit 1;";
-		ResultSet rs = sqlHandler.queryTable(sql);
-		
+		ResultSet rs = sqlHandler.callProcedure("Get_Permission_Level()");
 		try {
 			/*rs.next();
 			String permissionlvl = rs.getString("permission");
@@ -114,8 +108,7 @@ public class LoginHandler implements AutoCloseable {
 			return null;
 		}
 		
-		String sql = "select firstName,lastName from smalltownships.verifiedaccounts where login=1 limit 1;";
-		ResultSet rs = sqlHandler.queryTable(sql);	
+		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 		
 		try {
 			if(rs.next()) {
@@ -134,10 +127,8 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if an account has the email address "email"
 	 */
 	public boolean emailExists(String email) {
-		// Checks within BOTH tables, this can be changed if necessary
-		String sql = "select * from smalltownships.verifiedaccounts where email='"+email+"'"
-				+ " union select * from smalltownships.unverifiedaccounts where email='"+email+"';";
-		ResultSet rs = sqlHandler.queryTable(sql);	
+
+		ResultSet rs = sqlHandler.callProcedure("Email_Exists(?)", 1, new String[] {email});	
 		try {
 			if(rs.next()) {
 				return true;
@@ -157,9 +148,7 @@ public class LoginHandler implements AutoCloseable {
 	 * @return True if an account has the username "user"
 	 */
 	public boolean usernameExists(String user) {
-		String sql = "select * from smalltownships.verifiedaccounts where username='"+user+"'"
-				+ " union select * from smalltownships.unverifiedaccounts where username='"+user+"';";
-		ResultSet rs = sqlHandler.queryTable(sql);	
+		ResultSet rs = sqlHandler.callProcedure("User_Exists(?)", 1, new String[] {user});
 		try {
 			if(rs.next()) {
 				return true;
@@ -178,15 +167,14 @@ public class LoginHandler implements AutoCloseable {
 	 * @param email The email address of the new user (redundant if username is email address)
 	 * @return True if a new account was created, false otherwise
 	 */
-	public boolean createNewUser(String user, String password, String email) {
+	public boolean createNewUser(String fName, String lName, String user, String password, String email) {
 		if (usernameExists(user)) {
 			return false;
 		} else if (emailExists(email)) {
 			return false;
 		} else {
-			String sql = "INSERT INTO smalltownships.unverifiedaccounts (username, password, email, applicationDate) "
-					+ "VALUES ('" + user + "', '"+password+"', '"+email+"', CURDATE());";
-	    	return sqlHandler.updateTable(sql);
+			sqlHandler.callProcedure("Create_Unverified_User(?,?,?,?,?)", 5, new String[] {fName, lName, user, password, email});
+			return true;
 		}
 	}
 	
@@ -194,9 +182,7 @@ public class LoginHandler implements AutoCloseable {
 	 * Logout all users (should only be one)
 	 */
 	public void logout() {
-		String sql = "update smalltownships.verifiedaccounts set login=0;";
-		
-		sqlHandler.updateTable(sql);
+		sqlHandler.callProcedure("Update_Login(?,?)", 2, new String[] {"", "0"});
 	}
 
 	@Override
