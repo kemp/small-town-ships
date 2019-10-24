@@ -3,6 +3,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="/small-town-ships">
+            <img src="logo.svg" style="height: 3rem;" alt="" />
             Small Town Ships
         </a>
         
