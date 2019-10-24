@@ -109,7 +109,7 @@ public class EmailVerifier {
 	 * @return True if the account was moved to the verifiedaccounts table, false otherwise
 	 */
 	public static boolean verifyAccount(String userCode) {
-		String first, last, pass, user, email, sql;
+		String user;
 		ResultSet rs;
 		System.out.println(userCode);
 		if (userCode == null || userCode.isEmpty()) {
@@ -361,26 +361,13 @@ public class EmailVerifier {
 					}
 				});
 				if (!oldCodes.isEmpty()) {
-<<<<<<< HEAD
+
 					MySQLHandler sqlHandler = new MySQLHandler();
-					// Remove the old codes from the cache
-					oldCodes.forEach((code) -> {
-						verificationCodes.remove(code.code);
-						String sql = "DELETE FROM smalltownships.unverifiedaccounts WHERE"
-								+ " username='" + code.username + "';";
-						sqlHandler.updateTable(sql);
-					});
-=======
-					try (MySQLHandler sqlHandler = new MySQLHandler()) {
 						// Remove the old codes from the cache
 						oldCodes.forEach((code) -> {
 							verificationCodes.remove(code.code);
 							sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
 						});
-					} catch (SQLException e) {
-						throw new RuntimeException(e);
-					}
->>>>>>> sql-overhaul
 				}
 			}
 		}
