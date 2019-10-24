@@ -23,73 +23,29 @@ public class Register extends HttpServlet {
 			throw new RuntimeException("Cannot find JDBC libraries", e);
 		}
 	}
+	LoginHandler lh = new LoginHandler();
 	
 	private boolean emailExists(MySQLHandler handler, String email) throws SQLException {
-		String sql;
-		ResultSet rs;
-		boolean exists;
-		// Check for matches in the verified users
-		sql = "SELECT * FROM verifiedaccounts "
-				+ "WHERE email = '" + email + "';";
-		rs = handler.queryTable(sql);
-		exists = rs.first();
-		rs.close();
-		if (exists) {
-			// Match found
-			return true;
-		}
-		// Check for matches in the unverified users
-		sql = "SELECT * FROM unverifiedaccounts "
-				+ "WHERE email = '" + email + "';";
-		rs = handler.queryTable(sql);
-		exists = rs.first();
-		rs.close();
-		return exists;	// Return if a match was found
+		return lh.emailExists(email);
 	}
 
 	private boolean userExists(MySQLHandler handler, String user) throws SQLException {
-		String sql;
-		ResultSet rs;
-		boolean exists;
-		// Check for matches in the verified users
-		sql = "SELECT * FROM verifiedaccounts "
-				+ "WHERE username = '" + user + "';";
-		rs = handler.queryTable(sql);
-		exists = rs.first();
-		rs.close();
-		if (exists) {
-			// Match found
-			return true;
-		}
-		// Check for matches in the unverified users
-		sql = "SELECT * FROM unverifiedaccounts "
-				+ "WHERE username = '" + user + "';";
-		rs = handler.queryTable(sql);
-		exists = rs.first();
-		rs.close();
-		return exists;	// Return if a match was found
+		return lh.usernameExists(user);
 	}
 	
 	private void createNewAccount(MySQLHandler handler, String firstName, String lastName,
 			String user, String email, String password) throws SQLException {
 		ResultSet rs;
-		String sql;
 		Date date;
-		sql = "INSERT INTO unverifiedaccounts VALUES "
-				+ "('"+firstName+"','"+lastName+"','"+user+"','"+password+"','"+email
-				+ "', CURDATE());";
-		handler.updateTable(sql);
-		sql = "SELECT applicationDate FROM unverifiedaccounts WHERE "
-				+ "username = '"+user+"';";
-		rs = handler.queryTable(sql);
+		rs = handler.callProcedure("Create_Unverified_User(?,?,?,?,?)", 5, 
+				new String[] {firstName, lastName, user, password, email});
 		rs.next();
-		date = rs.getDate(1);
+		date = rs.getDate("applicationDate");
 		rs.close();
 		try {
 			EmailVerifier.createVerificationPage(email, user, date.toString());
 		} catch (Exception e) {
-			sql = "DELETE FROM unverifiedaccounts WHERE username='"+user+"';";
-			handler.updateTable(sql);
+			handler.callProcedure("Remove_User(?)", 1, new String[] {user});
 			throw new RuntimeException("Could not create verification email", e);
 		}
 	}

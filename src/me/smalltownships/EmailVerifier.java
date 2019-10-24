@@ -123,24 +123,12 @@ public class EmailVerifier {
 		}
 		System.out.println(user);
 		try (MySQLHandler sqlHandler = new MySQLHandler()) {
-			sql = "SELECT firstname, lastname, password, email FROM "
-					+ "unverifiedaccounts where username='" + user + "';";
-			rs = sqlHandler.queryTable(sql);
+			rs = sqlHandler.callProcedure("Search_Unverified_User(?)", 1, new String[] {user});
 			if (!rs.next()) {		// No entry found
 				rs.close();
 				return false;
 			}
-			first = rs.getString(1);
-			last = rs.getString(2);
-			pass = rs.getString(3);
-			email = rs.getString(4);
-			rs.close();
-			sql = "DELETE FROM unverifiedaccounts WHERE"
-					+ " username='" + user + "';";
-			sqlHandler.updateTable(sql);
-			sql = "INSERT INTO verifiedaccounts VALUES "
-					+ "('"+first+"','"+last+"','"+user+"','"+pass+"','"+email+"', 0);";
-			sqlHandler.updateTable(sql);
+			sqlHandler.callProcedure("Verify_User(?)", 1, new String[] {user});
 			return true;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -373,6 +361,7 @@ public class EmailVerifier {
 					}
 				});
 				if (!oldCodes.isEmpty()) {
+<<<<<<< HEAD
 					MySQLHandler sqlHandler = new MySQLHandler();
 					// Remove the old codes from the cache
 					oldCodes.forEach((code) -> {
@@ -381,6 +370,17 @@ public class EmailVerifier {
 								+ " username='" + code.username + "';";
 						sqlHandler.updateTable(sql);
 					});
+=======
+					try (MySQLHandler sqlHandler = new MySQLHandler()) {
+						// Remove the old codes from the cache
+						oldCodes.forEach((code) -> {
+							verificationCodes.remove(code.code);
+							sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
+						});
+					} catch (SQLException e) {
+						throw new RuntimeException(e);
+					}
+>>>>>>> sql-overhaul
 				}
 			}
 		}
