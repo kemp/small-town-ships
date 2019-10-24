@@ -37,12 +37,6 @@ public class Inventory extends HttpServlet {
 					// User is unauthorized, take them to the login page.
 					response.sendRedirect("./");
 					
-					try {
-						loginHandler.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
 					return;
 				}
 		    	
@@ -53,12 +47,6 @@ public class Inventory extends HttpServlet {
 		        // (Users can not access directly into JSP pages placed in WEB-INF)
 		        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
 		        dispatcher.forward(request, response);
-		        
-		        try {
-		        	loginHandler.close();
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        }
 	}
 
 	/**

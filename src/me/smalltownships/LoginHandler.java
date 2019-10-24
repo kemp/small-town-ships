@@ -3,7 +3,7 @@ package me.smalltownships;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LoginHandler implements AutoCloseable {
+public class LoginHandler {
 	
 	static {
 		try {
@@ -197,11 +197,5 @@ public class LoginHandler implements AutoCloseable {
 		String sql = "update smalltownships.verifiedaccounts set login=0;";
 		
 		sqlHandler.updateTable(sql);
-	}
-
-	@Override
-	public void close() throws Exception {
-		// Close the database connection
-		sqlHandler.close();
 	}
 }
