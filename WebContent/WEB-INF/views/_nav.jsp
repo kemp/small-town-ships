@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="me.smalltownships.LoginHandler" %>
+<% LoginHandler loginHandler = new LoginHandler(); %>
+
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="/small-town-ships">
@@ -13,7 +15,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-                <% if (new LoginHandler()).isAdmin()) { %>
+                <% if (loginHandler.isAdmin()) { %>
                 	<li class="nav-item"><a class="nav-link" href="./products">Products</a></li>
                 	<li class="nav-item"><a class="nav-link" href="./inventory">Inventory</a></li>
                 <% } else { %>          
@@ -24,25 +26,12 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
                 <!-- Authentication Links -->
-                <% 
-                LoginHandler lh1 = new LoginHandler(); 
-                if (! lh1.isLoggedIn()) { 
-                %>
+                <% if (! loginHandler.isLoggedIn()) { %>
                     <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li>
-                <% 
-                } else { 
-                %>
-          
-                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= lh1.loggedInUserName() %>)</a></li>
-                <% 
-                }
-                try {
-                    lh.close();   
-                } catch (Exception e) {
-                    e.printStackTrace();   
-                }
-                %>
+                <% } else { %>
+                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= loginHandler.loggedInUserName() %>)</a></li>
+                <% } %>
             </ul>
         </div>
     </div>
