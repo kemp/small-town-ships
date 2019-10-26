@@ -13,7 +13,7 @@
 
         <main class="container mt-3">
             <div>
-                <h1>You have successfully logged out.</h1>
+                <h1 class="display-4">You have successfully logged out.</h1>
                 
                 <p>
                     <a href="./" class="btn btn-primary">Log In</a>

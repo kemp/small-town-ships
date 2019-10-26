@@ -18,11 +18,23 @@
         <jsp:include page="_nav.jsp"></jsp:include>
 
         <main class="container mt-3">
-            <div class="d-flex">
-                <h1 class="mr-auto">Inventory</h1>
-            </div>
             <table class="table">
+            	
                 <tbody>
+                <tr>
+                <th>
+                <h1>Image</h1>
+                </th>
+                <th>
+                <h1>Description</h1>
+                </th>
+                <th>
+                <h1>Pricing</h1>
+                </th>
+                <th>
+                <h1>Count</h1>
+                </th>
+                </tr>
                     <% for (Product product : (List<Product>)request.getAttribute("inventorymanagement")) { %>
                         <tr>
                             <td>
@@ -37,11 +49,19 @@
                             </td>
                             <td style="vertical-align: middle">
                             <form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
-                            	<input type="number" id ="count" name="count" min="0" max="100">   
+                            <input class="form-control form-control-sm" type="number" id ="count" name="count" min="0" max="100000000000000" value="<%= product.getFormattedPrice() %>">
+                            </td>
+                            <td style="vertical-align: middle">
+                            	<input class="form-control form-control-sm" type="number" id ="count" name="count" min="0" max="100000">  
                             </td>
                         </tr>
                     <% } %>
                     <tr>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
                     <td colspan="3">
                     <input type="submit" class="btn btn-primary" value="Update">
                     </form>
