@@ -51,7 +51,7 @@ public class Products {
 			"<ul>\n" + 
 			"<li>Speed: 28 knots</li>\n" + 
 			"<li>Dimensions:<ul>\n" + 
-			"<li>Length: 186 meters</li>\n" + 
+			"<li>Length: 186 meters</li>\n" +  
 			"<li>Beam: 21.6 meters</li>\n" + 
 			"<li>Draught: 5.8 meters</li>\n" + 
 			"</ul>\n" + 

@@ -33,12 +33,6 @@ public class LoginServlet extends HttpServlet {
 			response.sendRedirect("./?error=incorrect-password"); // Incorrect password
 		}
 		
-		try {
-			loginHandler.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 }

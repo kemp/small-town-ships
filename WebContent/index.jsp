@@ -1,19 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="me.smalltownships.LoginHandler" %>
 <%
-
-LoginHandler loginHandler = new LoginHandler();
-
-if (loginHandler.isLoggedIn()) {
+// Only allow unauthenticated users.
+if ((new LoginHandler()).isLoggedIn()) {
     response.sendRedirect("products");
 }
-
-try {
-    loginHandler.close();
-} catch (Exception e) {
-    e.printStackTrace();
-}
-
 %>
 <!DOCTYPE html>
 <html>
