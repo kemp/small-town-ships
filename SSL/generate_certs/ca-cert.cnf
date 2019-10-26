@@ -1,0 +1,12 @@
+[req]
+distinguished_name=req_distinguished_name
+prompt=no
+
+[req_distinguished_name]
+C=US
+ST=Georgia
+L=Marietta
+O=Small Town Ships, Inc.
+OU=Group
+CN=SmallTownShipsInc_MySQL_issuer
+emailAddress=smalltownships@gmail.com
