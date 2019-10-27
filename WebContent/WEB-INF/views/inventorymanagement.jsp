@@ -47,23 +47,23 @@
                                     <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>" width="100">
                                 </a>
                             </td>
-                            <td>
-                            <input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>">  
+                            <td>                    
+                            	<input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>">  
                             </td>
                             <td>
                                 <textarea rows="6" cols="50" id="description" name="description" required="required"><%= product.getDescription() %></textarea>
                                 <p>Price: <%= product.getFormattedPrice() %></p>
                             </td>
                             <td style="vertical-align: middle">
-                            <div class="col-20">
-                            <input class="form-control form-control-sm" type="number" id ="price" name="price" min="0" max="100000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getFormattedPrice() %>">
-                            </div>
+                            	<div class="col-20">
+                            		<input class="form-control form-control-sm" type="number" id ="price" name="price" min="1" max="1000000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getStringFormattedPrice() %>">
+                            	</div>
                             </td>
                             <td style="vertical-align: middle">
                             	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="0" max="100000" value="<%= product.getQuantity() %>">	
                             </td>
                             <td style="vertical-align: middle">
-                             <input type="submit" class="btn btn-primary" value="Update">
+                            	<input type="submit" class="btn btn-primary" value="Update">
                             </td>
                             </form>
                         </tr>

@@ -66,4 +66,9 @@ public class Product {
 		
 		return nf.format(this.price);
 	}
+	
+	public String getStringFormattedPrice()
+	{
+		return String.format ("%.2f", price);
+	}
 }

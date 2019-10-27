@@ -15,13 +15,13 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class Inventory
  */
 @WebServlet("/inventory")
-public class Inventory extends HttpServlet {
+public class InventoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Inventory() {
+    public InventoryServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -56,7 +56,7 @@ public class Inventory extends HttpServlet {
 		
 		System.out.println(request.getParameter("name"));
 		System.out.println(request.getParameter("description"));
-		System.out.println(request.getParameter("price").toString() + 2);
+		System.out.println(request.getParameter("price"));
 		System.out.println(request.getParameter("quantity"));
 		
     	// Append the list of products to the current request
