@@ -304,7 +304,8 @@ BEGIN
 -- also used to check if anyone is logged in, otherwise it will be empty
 select
 	firstname,
-    lastname
+    lastname,
+    username
 from
 	smalltownships.verifiedaccounts
 where
