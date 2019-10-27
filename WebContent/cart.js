@@ -2,7 +2,7 @@
 	
 	var cartEl = document.getElementById('cart');
 	var checkoutButton, cartTotalEl, cartTotalPluralEl;
-	var items = {};
+	var items = {}, itemNames = {};
 	var storage = window.sessionStorage;
 	
 	// Create the cart, if the element exists
@@ -30,9 +30,19 @@
 		checkoutButton.addEventListener('click', checkout);
 	}
 	
+	function isCartVisible() {
+		return cartEl;
+	}
+	
 	// update the total of the cart
 	function updateItemTotal() {
-		cartTotalEl.innerText = getItemTotal();
+		if (isCartVisible()) {
+			cartTotalEl.innerText = getItemTotal();
+		}		
+	}
+	
+	function formatAsCurrency(amount) {
+		return amount.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2})
 	}
 	
 	function getItemTotal() {
@@ -42,7 +52,7 @@
 			total += items[key]["price"];
 		}
 		
-		return total.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2});
+		return formatAsCurrency(total);
 	}
 	
 	// Save the cart items to storage (persist on page reloads)
@@ -55,16 +65,70 @@
 		items = JSON.parse(storage.getItem('items')) || {};
 	}
 	
-	// Checkout!
+	function isCartEmpty() {
+		return Object.keys(items).length === 0;
+	}
+	
+	// Proceed to the checkout
 	function checkout() {
-		if (Object.keys(items).length === 0) {
-			alert("Cart is empty!");
+		if (isCartEmpty()) {
+			alert("Please add an item to the cart to continue.");
 			return;
 		}
 		
-		alert("Thank you for shopping with Small Town Ships.\nYour total is: " + getItemTotal());
+		let location = new URL('./checkout', window.location);
 		
-		clearCart();
+		// TODO: move this to actual checkout...
+		//for (const item in items) {
+		//	if (items.hasOwnProperty(item)) {
+		//		location.searchParams.append('product[' + item + ']', items[item]["quantity"]);
+		//	}
+		//}
+		
+
+		window.location.href = location;
+	}
+	
+	// public: Load checkout products
+	function loadCheckoutProducts(checkoutTable, failedCheckout, checkoutInput) {
+		let checkoutEl = document.getElementById(checkoutTable);
+		let failedCheckoutEl = document.getElementById(failedCheckout);
+		let checkoutInputEl = document.getElementById(checkoutInput);
+		
+		checkoutInputEl.value = '';
+		
+		for (const productId in items) {
+			let productName = itemNames[productId];
+			let productQty = items[productId].quantity;
+			let productPrice = items[productId].price;
+			
+			let html = `
+				<td>${productName}</td>
+				<td>${productQty}</td>
+				<td>${formatAsCurrency(productPrice)}</td>
+				<td><button class="btn btn-danger" onclick="window.removeItem(${productId}); location.reload()">&times;</button></td>
+			`;
+			
+			let node = document.createElement('tr');
+			node.innerHTML = html;
+			
+			checkoutEl.appendChild(node);
+			
+			// Update checkout input
+			// Format: id,qty,;id2,qty2;...
+			checkoutInputEl.value += productId + ',' + productQty + ';';
+		}
+		
+		if (isCartEmpty()) {
+			failedCheckoutEl.innerText = 'Please add an item to the cart to continue.';
+		} else {
+			failedCheckoutEl.remove();
+		}
+	}
+	
+	// public: load product names
+	function loadProductNames(names) {
+		itemNames = JSON.parse(names);
 	}
 	
 	// Public: add an item to cart given ID and quantity
@@ -96,6 +160,13 @@
 		updateItemTotal();
 	}
 	
+	// Public: remove item from cart
+	function removeItem(id) {
+		delete items[id];
+		
+		saveItems();
+	}
+	
 	// Public: get quantity added to cart of a product
 	function getCartQuantityForProduct(productId) {
 		if (! items[productId]) return 0;
@@ -103,16 +174,24 @@
 		return items[productId]["quantity"] || 0;
 	}
 	
-	if (cartEl) {
-		loadItems();
+	if (isCartVisible()) {
 		initCart();
-		updateItemTotal();
-		
-		// Add public functions
-		window.addToCart = addToCart;
-		window.clearCart = clearCart;
-		window.getCartQuantityForProduct = getCartQuantityForProduct;
 	}
+	
+	loadItems();
+	updateItemTotal();
+
+	// Add public functions
+	window.addToCart = addToCart;
+	window.clearCart = clearCart;
+	window.getCartQuantityForProduct = getCartQuantityForProduct;
+	window.removeItem = removeItem;
+	window.getItemTotal = getItemTotal;
+	
+	// Add public functions related to checkout
+	window.loadCheckoutProducts = loadCheckoutProducts;
+	window.loadProductNames = loadProductNames;
+
 
 	
 })(window, document);
