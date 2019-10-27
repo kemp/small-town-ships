@@ -77,14 +77,6 @@
 		}
 		
 		let location = new URL('./checkout', window.location);
-		
-		// TODO: move this to actual checkout...
-		//for (const item in items) {
-		//	if (items.hasOwnProperty(item)) {
-		//		location.searchParams.append('product[' + item + ']', items[item]["quantity"]);
-		//	}
-		//}
-		
 
 		window.location.href = location;
 	}
