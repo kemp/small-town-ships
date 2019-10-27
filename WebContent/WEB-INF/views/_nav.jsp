@@ -31,7 +31,7 @@
                     <li class="nav-item"><a class="nav-link" href="./index.jsp">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="./register.jsp">Register</a></li>
                 <% } else { %>
-                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= loginHandler.loggedInUserName() %>)</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./logout.jsp">Log Out (<%= loginHandler.loggedInDisplayName() %>)</a></li>
                 <% } %>
             </ul>
         </div>
