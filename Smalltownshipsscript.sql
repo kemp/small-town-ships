@@ -55,9 +55,10 @@ DROP TABLE IF EXISTS `inventory`;
 CREATE TABLE `inventory` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(15,0) NOT NULL,
   `description` mediumtext,
+  `specifications` mediumtext,
+  `unit_price` decimal(15,0) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
@@ -70,7 +71,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (1,'Iowa Class',60,1820000000,'\"<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>\\n\"\n			\"<ul>\\n\" + \n			\"<li>Speed: 33 knots</li>\\n\" + \n			\"<li>Dimensions:<ul>\\n\" + \n			\"<li>Length: 270 meters</li>\\n\" + \n			\"<li>Beam: 33 meters</li>\\n\" + \n			\"<li>Draught: 11 meters</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"<li>Armament:<ul>\\n\" + \n			\"<li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li>\\n\" + \n			\"<li>Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"</ul>\\n\" + \n			\"\"','https://nationalinterest.org/sites/default/files/main_images/DN-ST-94-00424_(17258233731).jpg'),(2,'Deutschland Class',55,1550000000,'\"<p>While the Deutschland class \\\"pocket\\\" battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\\n\" \n			\"<ul>\\n\" + \n			\"<li>Speed: 28 knots</li>\\n\" + \n			\"<li>Dimensions:<ul>\\n\" + \n			\"<li>Length: 186 meters</li>\\n\" + \n			\"<li>Beam: 21.6 meters</li>\\n\" + \n			\"<li>Draught: 5.8 meters</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"<li>Armament:<ul>\\n\" + \n			\"<li>Main: 6x280mm guns distributed evenly in one fore turret and one aft turret.</li>\\n\" + \n			\"<li>Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.</li>\\n\" + \n			\"<li>Torpedoes: 8x535mm</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"</ul>\\n\" + \n			\"\"','https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/German_cruiser_Deutschland_in_1935.jpg/600px-German_cruiser_Deutschland_in_1935.jpg'),(3,'Bismark Class',47,1699000000,'\"<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>\\n\" \n			\"<ul>\\n\" + \n			\"<li>Speed: 29 knots</li>\\n\" + \n			\"<li>Dimensions:<ul>\\n\" + \n			\"<li>Length: 248 meters</li>\\n\" + \n			\"<li>Beam: 36 meters</li>\\n\" + \n			\"<li>Draught: 8.5 meters</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"<li>Armament:<ul>\\n\" + \n			\"<li>Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.</li>\\n\" + \n			\"<li>Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.</li>\\n\" + \n			\"</ul>\\n\" + \n			\"</li>\\n\" + \n			\"</ul>\\n\" + \n			\"\"','https://upload.wikimedia.org/wikipedia/commons/f/fe/Bundesarchiv_Bild_193-04-1-26%2C_Schlachtschiff_Bismarck.jpg');
+INSERT INTO `inventory` VALUES (1,'Iowa Class','\"<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>\\n\"\n			','\"<ul><li>Speed: 33 knots</li><li>Dimensions:<ul><li>Length: 270 meters</li><li>Beam: 33 meters</li><li>Draught: 11 meters</li></ul></li><li>Armament:<ul><li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li><li>Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.</li></ul></li></ul>\"',1820000000,60,'https://nationalinterest.org/sites/default/files/main_images/DN-ST-94-00424_(17258233731).jpg'),(2,'Deutschland Class','\"<p>While the Deutschland class \\\"pocket\\\" battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>\\n\" \n			','\"<ul><li>Speed: 28 knots</li><li>Dimensions:<ul><li>Length: 186 meters</li><li>Beam: 21.6 meters</li><li>Draught: 5.8 meters</li></ul></li><li>Armament:<ul><li>Main: 6x280mm guns distributed evenly in one fore turret and one aft turret.</li><li>Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.</li><li>Torpedoes: 8x535mm</li></ul></li></ul>\"',1550000000,55,'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/German_cruiser_Deutschland_in_1935.jpg/600px-German_cruiser_Deutschland_in_1935.jpg'),(3,'Bismark Class','\"<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>\\n\" \n		','	\"<ul><li>Speed: 29 knots</li><li>Dimensions:<ul><li>Length: 248 meters</li><li>Beam: 36 meters</li><li>Draught: 8.5 meters</li></ul></li><li>Armament:<ul><li>Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.</li><li>Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.</li></ul></li></ul>\"',1699000000,47,'https://upload.wikimedia.org/wikipedia/commons/f/fe/Bundesarchiv_Bild_193-04-1-26%2C_Schlachtschiff_Bismarck.jpg');
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,6 +87,8 @@ CREATE TABLE `transactions` (
   `username` varchar(45) NOT NULL,
   `price` decimal(15,0) NOT NULL,
   `cardnumber` varchar(16) NOT NULL,
+  `cardExpiration` varchar(7) NOT NULL,
+  `deliveryAddress` tinytext,
   PRIMARY KEY (`transid`),
   KEY `username_idx` (`username`),
   CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `verifiedaccounts` (`username`)
@@ -98,7 +101,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (1,'manager',0,'0');
+INSERT INTO `transactions` VALUES (1,'manager',0,'0','',NULL);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -652,4 +655,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-24 19:11:28
+-- Dump completed on 2019-10-27 15:04:44
