@@ -86,12 +86,8 @@ public class CheckoutServlet extends HttpServlet {
 			productsCheckoutMap.put(Products.findProductByID(productId), productQuantity);
 		}
 		
-		// Save the data to the DB
-		System.out.println(productsList);
-		System.out.println(deliveryAddress);
-		System.out.println(creditCardNumber);
-		System.out.println(creditCardExpiration);
-		// TODO
+		TransactionHandler.createTransaction(productsCheckoutMap, deliveryAddress, creditCardNumber, creditCardExpiration);
+		
 		
 		// Show the user that the request has submitted successfully
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/confirmation.jsp");
