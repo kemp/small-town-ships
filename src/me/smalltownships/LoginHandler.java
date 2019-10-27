@@ -101,9 +101,9 @@ public class LoginHandler {
 	 * Get the name of the currently logged in user
 	 * 
 	 * @author kemp
-	 * @return boolean whether a user is logged in
+	 * @return String firstName + lastName
 	 */
-	public String loggedInUserName() {
+	public String loggedInDisplayName() {
 		if (!this.isLoggedIn()) {
 			return null;
 		}
@@ -113,6 +113,29 @@ public class LoginHandler {
 		try {
 			if(rs.next()) {
 				return rs.getString("firstName") + " " + rs.getString("lastName");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Get the username of the currently logged in user
+	 * 
+	 * @author kemp
+	 * @return String username
+	 */
+	public String loggedInUsername() {
+		if (!this.isLoggedIn()) {
+			return null;
+		}
+		
+		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
+		
+		try {
+			if(rs.next()) {
+				return rs.getString("username");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
