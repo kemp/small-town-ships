@@ -28,6 +28,7 @@ public class TransactionHandler extends InteractsWithSQL {
 				user,
 				Long.toString(computeGrandTotal(products)),
 				creditCardNumber
+				// TODO: deliveryAddress and creditCardExpiration are never stored (GH issue #4)
 			});
 			
 			// Loop through the list of products and use procedure "New_IMS_Transaction"
