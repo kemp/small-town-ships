@@ -17,7 +17,8 @@
     <body class="bg-light">
         <jsp:include page="_nav.jsp"></jsp:include>
 
-        <main class="container mt-3">
+        <div class="container mt-3">
+        <form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
             <table class="table">
             	
                 <tbody>
@@ -26,50 +27,50 @@
                 <h1>Image</h1>
                 </th>
                 <th>
+                <h1>Name</h1>
+                </th>
+                <th>
                 <h1>Description</h1>
                 </th>
                 <th>
                 <h1>Pricing</h1>
                 </th>
                 <th>
-                <h1>Count</h1>
+                <h1>Quantity</h1>
                 </th>
                 </tr>
                     <% for (Product product : (List<Product>)request.getAttribute("inventorymanagement")) { %>
                         <tr>
-                            <td>
+                        	<form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
+                            <td >
                                 <a href="./product?id=<%= product.getId() %>">
-                                    <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>">
+                                    <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>" width="100">
                                 </a>
                             </td>
                             <td>
-                                <h2><%= product.getName() %></h2>
-                                <%= product.getDescription() %>
+                            <input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>">  
+                            </td>
+                            <td>
+                                <textarea rows="6" cols="50" id="description" name="description" required="required"><%= product.getDescription() %></textarea>
                                 <p>Price: <%= product.getFormattedPrice() %></p>
                             </td>
                             <td style="vertical-align: middle">
-                            <form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
-                            <input class="form-control form-control-sm" type="number" id ="count" name="count" min="0" max="100000000000000" value="<%= product.getFormattedPrice() %>">
+                            <div class="col-20">
+                            <input class="form-control form-control-sm" type="number" id ="price" name="price" min="0" max="100000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getFormattedPrice() %>">
+                            </div>
                             </td>
                             <td style="vertical-align: middle">
-                            	<input class="form-control form-control-sm" type="number" id ="count" name="count" min="0" max="100000">  
+                            	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="0" max="100000" value="<%= product.getQuantity() %>">	
                             </td>
+                            <td style="vertical-align: middle">
+                             <input type="submit" class="btn btn-primary" value="Update">
+                            </td>
+                            </form>
                         </tr>
                     <% } %>
-                    <tr>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    <td colspan="3">
-                    <input type="submit" class="btn btn-primary" value="Update">
-                    </form>
-                    </td>
-                    </tr>
                 </tbody>
             </table>
-        </main>
+        </div>
         <jsp:include page="_footer.jsp"></jsp:include>
     </body>
 </html>

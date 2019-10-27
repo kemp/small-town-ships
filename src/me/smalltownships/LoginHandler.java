@@ -88,7 +88,7 @@ public class LoginHandler {
 			if(rs.next())
 			{
 				int i = Integer.parseInt(rs.getString("permission"));
-				if(i == 0) 
+				if(i == 1) 
 					return true;
 			}
 		} catch (SQLException e) {

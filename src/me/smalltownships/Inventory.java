@@ -53,11 +53,19 @@ public class Inventory extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String number = request.getParameter("count");
 		
-		System.out.println(number);
-		System.out.println(number);
-		System.out.println(number);
+		System.out.println(request.getParameter("name"));
+		System.out.println(request.getParameter("description"));
+		System.out.println(request.getParameter("price").toString() + 2);
+		System.out.println(request.getParameter("quantity"));
+		
+    	// Append the list of products to the current request
+    	request.setAttribute("inventorymanagement", getProducts());
+ 
+        // Forward to /WEB-INF/views/products.jsp
+        // (Users can not access directly into JSP pages placed in WEB-INF)
+        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
+        dispatcher.forward(request, response);
 	}
 
 }
