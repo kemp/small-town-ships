@@ -8,8 +8,8 @@ import java.util.List;
  * 
  * @author kemp
  */
-public class Products {
-
+public class Products extends InteractsWithSQL {
+	
 	/**
 	 * Fetch a list of all products
 	 * 
