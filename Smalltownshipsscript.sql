@@ -354,7 +354,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `New_Transaction`(in id int(11), in uname varchar(20), in cost decimal(15,0), in card varchar(16))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `New_Transaction`(in id int(11), in uname varchar(20), in cost decimal(15,0), in card varchar(16), in exp varchar(7), in address tinytext)
 BEGIN
 -- creates new transaction entry in transaction table
 insert into
@@ -363,7 +363,9 @@ values (
 	id,
     uname,
     cost,
-    card );
+    card,
+    exp,
+    address );
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
