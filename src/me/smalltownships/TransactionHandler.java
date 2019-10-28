@@ -39,8 +39,11 @@ public class TransactionHandler extends InteractsWithSQL {
 					Integer.toString(productSet.getValue() * -1) // Use inverse to represent lost inventory
 				});
 			}
+			
+			// Balance the inventory afterward
+			sqlHandler.callProcedure("Balance_Inventory()");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace(); // TODO: Show error to user
 		}
 	}
 	
