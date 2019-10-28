@@ -23,12 +23,13 @@ public class TransactionHandler extends InteractsWithSQL {
 			String user = (new LoginHandler()).loggedInUsername();
 			
 			// Create a user transaction using "New_Transaction" stored procedure
-			sqlHandler.callProcedure("New_Transaction(?,?,?,?)", 4, new String[] {
+			sqlHandler.callProcedure("New_Transaction(?,?,?,?,?,?)", 6, new String[] {
 				Integer.toString(transactionId),
 				user,
 				Long.toString(computeGrandTotal(products)),
-				creditCardNumber
-				// TODO: deliveryAddress and creditCardExpiration are never stored (GH issue #4)
+				creditCardNumber,
+				creditCardExpiration,
+				deliveryAddress
 			});
 			
 			// Loop through the list of products and use procedure "New_IMS_Transaction"

@@ -104,16 +104,16 @@ public class MySQLHandler implements AutoCloseable {
 	 *  @param String SQL statement that should return nothing
 	 *  @return True if statement executed, false if an exception was thrown
 	 */
-//	public boolean updateTable(String sql) {
-//		try {
-//			Statement stmt = con.createStatement();
-//			stmt.executeUpdate(sql);
-//			return true;
-//			} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
+	public boolean updateTable(String sql) {
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(sql);
+			return true;
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	/**
 	 * Utility method, allowing for conversion of verifiedAccounts table to String
