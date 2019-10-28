@@ -48,15 +48,15 @@
                                 </a>
                             </td>
                             <td>                    
-                            	<input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>">  
+                            	<input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>" readonly>  
                             </td>
                             <td>
-                                <textarea rows="6" cols="50" id="description" name="description" required="required"><%= product.getDescription() %></textarea>
+                                <textarea rows="6" cols="50" id="description" name="description" required="required" readonly><%= product.getDescription() %></textarea>
                                 <p>Price: <%= product.getFormattedPrice() %></p>
                             </td>
                             <td style="vertical-align: middle">
                             	<div class="col-20">
-                            		<input class="form-control form-control-sm" type="number" id ="price" name="price" min="1" max="1000000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getStringFormattedPrice() %>">
+                            		<input class="form-control form-control-sm" type="number" id ="price" name="price" min="1" max="1000000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getStringFormattedPrice() %>" readonly>
                             	</div>
                             </td>
                             <td style="vertical-align: middle">

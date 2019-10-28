@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.smalltownships.MySQLHandler;
 
 /**
  * Servlet implementation class Inventory
@@ -54,11 +55,14 @@ public class InventoryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println(request.getParameter("name"));
-		System.out.println(request.getParameter("description"));
-		System.out.println(request.getParameter("price"));
-		System.out.println(request.getParameter("quantity"));
+		MySQLHandler sqlHandler = new MySQLHandler();
 		
+		//sqlHandler.callProcedure("Balance_Inventory")
+		String productName = request.getParameter("name");
+		String quantity = request.getParameter("quantity");
+		sqlHandler.updateTable("UPDATE smalltownships.inventory SET quantity='"+ quantity + "' where name='" + productName+"'");
+		
+		sqlHandler.close();
     	// Append the list of products to the current request
     	request.setAttribute("inventorymanagement", getProducts());
  
