@@ -3,10 +3,36 @@ package me.smalltownships;
 import java.io.File;
 import java.sql.*;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MySQLHandler implements AutoCloseable {
+	
+	static {
+		// Load JDBC SSL settings from XML file
+		String path = System.getProperty("catalina.home") +
+				File.separator + "webapps" + File.separator;
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(new File(path + "SmallTownShipsConfig.xml"));
+			Element root = doc.getDocumentElement();
+			root.normalize();
+			// extract truststore and keystore passwords
+			Element db = (Element) root.getElementsByTagName("database").item(0);
+			String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
+			String ks = db.getElementsByTagName("keystore").item(0).getTextContent();
+			System.setProperty("javax.net.ssl.trustStorePassword", ts);
+			System.setProperty("javax.net.ssl.keyStorePassword", ks);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		// Set truststore and keystore path
+		path += "SSL" + File.separator;
+		System.setProperty("javax.net.ssl.trustStore", path + "truststore");
+		System.setProperty("javax.net.ssl.keyStore", path + "keystore");
+	}
 	
 	Connection con;
 	
@@ -15,12 +41,14 @@ public class MySQLHandler implements AutoCloseable {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document config = builder.parse(new File(System.getProperty("catalina.home") + File.separator + "webapps" + File.separator + "SmallTownShipsConfig.xml"));
-			String dbpswd = config.getDocumentElement().getElementsByTagName("password").item(0).getChildNodes().item(0).getNodeValue();
+			Element root = config.getDocumentElement();
+			root.normalize();
+			Element db = (Element) root.getElementsByTagName("database").item(0);
+			String dbpswd = db.getElementsByTagName("password").item(0).getNodeValue();
 			
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", dbpswd);
-			if(con == null)
-			{
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", dbpswd);
+			if(con == null) {
 				System.out.println("Not connected to database");
 			}
 		} catch (Exception e) {

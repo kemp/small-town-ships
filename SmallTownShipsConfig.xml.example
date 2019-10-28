@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<small_town_ships>
+	<database>
+		<username>root</username>
+		<password>qwerty</password>
+		<truststore>xxxxxx</truststore>
+		<keystore>xxxxxx</keystore>
+	</database>
+	<email>
+		<username>smalltownships@gmail.com</username>
+		<password>ssdgships</password>
+		<property>
+			<key>mail.transport.protocol</key>
+			<value>smtp</value>
+		</property>
+		<property>
+			<key>mail.smtp.host</key>
+			<value>smtp.gmail.com</value>
+		</property>
+		<property>
+			<key>mail.smtp.port</key>
+			<value>465</value>
+		</property>
+		<property>
+			<key>mail.smtp.auth</key>
+			<value>true</value>
+		</property>
+		<property>
+			<key>mail.smtp.socketFactory.port</key>
+			<value>465</value>
+		</property>
+		<property>
+			<key>mail.smtp.socketFactory.class</key>
+			<value>javax.net.ssl.SSLSocketFactory</value>
+		</property>
+	</email>
+</small_town_ships>
