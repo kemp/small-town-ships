@@ -13,7 +13,7 @@ import java.util.List;
 public class Products extends InteractsWithSQL {
 	
 	/**
-	 * Fetch a list of all products
+	 * Fetch a list of in-stock products
 	 * 
 	 * @return the products
 	 */
@@ -21,6 +21,35 @@ public class Products extends InteractsWithSQL {
     	List<Product> productsList = new ArrayList<Product>();
     	
     	ResultSet rs = sqlHandler.callProcedure("Stocked_Products");
+    	
+    	try {
+			while (rs.next()) {
+				productsList.add(new Product(
+					rs.getInt("id"),
+					rs.getString("name"),
+					rs.getString("description"),
+					rs.getString("specifications"),
+					rs.getDouble("unit_price"),
+					rs.getInt("quantity"),
+					rs.getString("url")
+				));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace(); // TODO: Show error to user
+		}
+    	
+    	return productsList;
+	}
+	
+	/**
+	 * Fetch a list of all products. For admin use only.
+	 * 
+	 * @return the products
+	 */
+	public static List<Product> getAllProducts() {
+    	List<Product> productsList = new ArrayList<Product>();
+    	
+    	ResultSet rs = sqlHandler.callProcedure("All_Products");
     	
     	try {
 			while (rs.next()) {

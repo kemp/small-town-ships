@@ -1,6 +1,6 @@
 package me.smalltownships;
 
-import static me.smalltownships.Products.getProducts;
+import static me.smalltownships.Products.getAllProducts;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public class InventoryServlet extends HttpServlet {
 				}
 		    	
 		    	// Append the list of products to the current request
-		    	request.setAttribute("inventorymanagement", getProducts());
+		    	request.setAttribute("inventorymanagement", getAllProducts());
 		 
 		        // Forward to /WEB-INF/views/products.jsp
 		        // (Users can not access directly into JSP pages placed in WEB-INF)
@@ -64,7 +64,7 @@ public class InventoryServlet extends HttpServlet {
 		
 		sqlHandler.close();
     	// Append the list of products to the current request
-    	request.setAttribute("inventorymanagement", getProducts());
+    	request.setAttribute("inventorymanagement", getAllProducts());
  
         // Forward to /WEB-INF/views/products.jsp
         // (Users can not access directly into JSP pages placed in WEB-INF)
