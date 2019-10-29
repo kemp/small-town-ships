@@ -77,7 +77,7 @@ public class Products extends InteractsWithSQL {
 	 * @return Product | null
 	 */
 	public static Product findProductByID(int id) {
-		for (Product p : getProducts()) {
+		for (Product p : getAllProducts()) {
 			if (p.getId() == id) {
 				return p;
 			}
