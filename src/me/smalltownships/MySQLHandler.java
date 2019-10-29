@@ -21,8 +21,6 @@ public class MySQLHandler implements AutoCloseable {
 	
 	static {
 		// set default connection properties
-		props.setProperty("trustCertificateKeyStoreUrl", "file:" + TRUST_PATH);
-		props.setProperty("clientCertificateKeyStoreUrl", "file:" + KEY_PATH);
 		props.setProperty("allowPublicKeyRetrieval", "true");
 		props.setProperty("serverTimezone", "UTC");
 		// Load JDBC connection settings from XML file
@@ -38,6 +36,8 @@ public class MySQLHandler implements AutoCloseable {
 			if (!ssl.equals("DISABLED")) {
 				String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
 				String ks = db.getElementsByTagName("keystore").item(0).getTextContent();
+				props.setProperty("trustCertificateKeyStoreUrl", "file:" + TRUST_PATH);
+				props.setProperty("clientCertificateKeyStoreUrl", "file:" + KEY_PATH);
 				props.setProperty("trustCertificateKeyStorePassword", ts);
 				props.setProperty("clientCertificateKeyStorePassword", ks);
 			}
