@@ -57,7 +57,7 @@ public class EmailVerifier {
 
 	private static final Encoder base64Encode;
 	private static final TreeMap<String,VerificationCode> verificationCodes;
-	public static final Queue<Message> emailQueue;
+	private static final Queue<Message> emailQueue;
 
 	private static final String serverEmailAccount;
 	private static final String serverEmailPassword;

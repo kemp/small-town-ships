@@ -25,6 +25,12 @@ if ((new LoginHandler()).isLoggedIn()) {
     	    	<label for="password">Password</label>
     	    	<input type="password" class="form-control" id="password" placeholder="Password" name="password">
     		</div>
+			<%
+			String msg = (String)request.getAttribute("me.smalltownships.login.loginerr");
+			if (msg != null) {
+			%>
+			<span style="color:red;font-weight:bold;"><%= msg %></span>
+			<% } %>
     		<button type="submit" class="btn btn-primary">Login</button>
     		<br>
     		<p>Don't have an account? <a href="./register.jsp">Sign up</a></p>

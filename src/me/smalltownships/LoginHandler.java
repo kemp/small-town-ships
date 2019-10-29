@@ -41,6 +41,9 @@ public class LoginHandler {
 	 * @return True if the username and password match, false otherwise
 	 */
 	public boolean tryLogin(String user, String password) {
+		if (user.length() > 20 || password.length() > 25) {
+			return false;
+		}
 		ResultSet rs = sqlHandler.callProcedure("Try_Login(?,?)", 2, new String[] {user, password});
 
 		try {
