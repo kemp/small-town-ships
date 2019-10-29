@@ -1,9 +1,12 @@
 package me.smalltownships;
 
 import static me.smalltownships.Products.getAllProducts;
+import static me.smalltownships.Products.findProductByID;
+
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -33,22 +36,22 @@ public class InventoryServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Ensure the user is authenticated
-				LoginHandler loginHandler = new LoginHandler();
-				
-				if (! loginHandler.isLoggedIn()) {
-					// User is unauthorized, take them to the login page.
-					response.sendRedirect("./");
-					
-					return;
-				}
-		    	
-		    	// Append the list of products to the current request
-		    	request.setAttribute("inventorymanagement", getAllProducts());
-		 
-		        // Forward to /WEB-INF/views/products.jsp
-		        // (Users can not access directly into JSP pages placed in WEB-INF)
-		        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
-		        dispatcher.forward(request, response);
+		LoginHandler loginHandler = new LoginHandler();
+		
+		if (! loginHandler.isLoggedIn()) {
+			// User is unauthorized, take them to the login page.
+			response.sendRedirect("./");
+			
+			return;
+		}
+    	
+    	// Append the list of products to the current request
+    	request.setAttribute("inventorymanagement", getAllProducts());
+ 
+        // Forward to /WEB-INF/views/products.jsp
+        // (Users can not access directly into JSP pages placed in WEB-INF)
+        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
+        dispatcher.forward(request, response);
 	}
 
 	/**
@@ -56,10 +59,16 @@ public class InventoryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		int quantity = Integer.parseInt(request.getParameter("quantity"));
-	
+		
+		Product p = Products.findProductByID(productId);
+		
+		if((p.getQuantity()- quantity) < 0)
+		{
+			quantity = 0;
+		}
+		
 		//Compile the list of products
 		Map<Product, Integer> productsCheckoutMap = new HashMap<Product, Integer>(); // <Product, quantity>
 		
