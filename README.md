@@ -4,12 +4,7 @@ Small Town Ships is a basic ecommerce website for CS 4612 (Secure Software Devel
 
 ## Installation
 
-**TODO: Add screenshots**
-
-1. The user downloads and unzips the SSDG_TeamProject_Part1.zip folder.
-1. The user opens the SmallTownShipsConfig.xml file and sets the password element to their MySQL database root user’s password.
-1. The user then moves both the small-town-ships.war and the SmallTownShipsConfig.xml to the webapps directory of the working version of Apache Tomcat.
-1. The user then runs the databasesetup.bat file and enters their MySQL database “root” user password when prompted to “Enter Password” in order to create the necessary MySQL database on the user’s machine.
+*See Google Doc*
 
 ## Additional Resources
 
