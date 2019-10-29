@@ -158,28 +158,11 @@ public class EmailVerifier {
 			verificationCodes.put(code, page);
 		}
 		try {
-			// Create the email
-			Message msg = new MimeMessage(EMAIL_SESSION);
-			// Set the sender
-			msg.setFrom(FROM_ADDRESS);
-			// Set the recipient
-			msg.setRecipient(Message.RecipientType.TO,
-					new InternetAddress(email));
-			// Set the subject
-			msg.setSubject("Small Town Ships Account Verification");
-			// Set the contents of the email (in HTML format)
-			msg.setDataHandler(new DataHandler(new HTMLDataSource(
+			sendEmail(email, "Small Town Ships Account Verification", 
 				"<h1>Thank you for registering with " +
 				"Small Town Ships!</h1><br><h3>Please <a href=\"" +
 				WEB_ADDRESS + "?id=" + page.code + "\">" +
-				"click here</a> to verify your account.</h3>")));
-			// Save the message
-			msg.saveChanges();
-			// Add the message to the queue
-			synchronized (emailQueue) {
-				emailQueue.add(msg);
-				emailQueue.notifyAll();
-			}
+				"click here</a> to verify your account.</h3>");
 		} catch (MessagingException e) {
 			synchronized (verificationCodes) {
 				verificationCodes.remove(page.code);
@@ -225,7 +208,7 @@ public class EmailVerifier {
 		// config file
 		String username, password;
 		String xmlPath = System.getProperty("catalina.home") +
-				"\\webapps\\SmallTownShipsConfig.xml";
+				File.separator + "webapps" + File.separator + "SmallTownShipsConfig.xml";
 		try {
 			// Open the config file
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -273,6 +256,27 @@ public class EmailVerifier {
 		BACKGROUND_EMAIL_THREAD = new Emailer();
 		BACKGROUND_PAGECHECK_THREAD.start();
 		BACKGROUND_EMAIL_THREAD.start();
+	}
+	
+	public static void sendEmail(String to, String subject, String message) throws MessagingException {
+		// Create the email
+		Message msg = new MimeMessage(EMAIL_SESSION);
+		// Set the sender
+		msg.setFrom(FROM_ADDRESS);
+		// Set the recipient
+		msg.setRecipient(Message.RecipientType.TO,
+				new InternetAddress(to));
+		// Set the subject
+		msg.setSubject(subject);
+		// Set the contents of the email (in HTML format)
+		msg.setDataHandler(new DataHandler(new HTMLDataSource(message)));
+		// Save the message
+		msg.saveChanges();
+		// Add the message to the queue
+		synchronized (emailQueue) {
+			emailQueue.add(msg);
+			emailQueue.notifyAll();
+		}
 	}
 
 	private static class VerificationCode implements Comparable<VerificationCode> {
