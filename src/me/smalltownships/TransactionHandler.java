@@ -5,6 +5,20 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class TransactionHandler extends InteractsWithSQL {
+	
+	public static void createAdminTransaction(Map<Product, Integer> products) {
+		// Loop through the list of products and use procedure "New_IMS_Transaction"
+		for (Map.Entry<Product, Integer> productSet : products.entrySet()) {
+			sqlHandler.callProcedure("New_IMS_Transaction(?,?,?)", 3, new String[] {
+				"1",
+				Integer.toString(productSet.getKey().getId()),
+				Integer.toString(productSet.getValue()) // Use positive to represent gained inventory
+			});
+		}
+		
+		// Balance the inventory afterward
+		sqlHandler.callProcedure("Balance_Inventory()");
+	}
 
 	public static void createTransaction(Map<Product, Integer> products, String deliveryAddress, String creditCardNumber, String creditCardExpiration) {
 		try {
