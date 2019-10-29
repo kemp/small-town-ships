@@ -144,6 +144,29 @@ public class LoginHandler {
 	}
 	
 	/**
+	 * Get the email of the currently logged in user
+	 * 
+	 * @author kemp
+	 * @return String email
+	 */
+	public String loggedInEmail() {
+		if (!this.isLoggedIn()) {
+			return null;
+		}
+		
+		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
+		
+		try {
+			if(rs.next()) {
+				return rs.getString("email");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
 	 * Check whether an account with the given email exists.
 	 * 
 	 * @param email The email address to check for

@@ -308,7 +308,8 @@ BEGIN
 select
 	firstname,
     lastname,
-    username
+    username,
+    email
 from
 	smalltownships.verifiedaccounts
 where
