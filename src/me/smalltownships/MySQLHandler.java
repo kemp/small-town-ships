@@ -2,6 +2,8 @@ package me.smalltownships;
 
 import java.io.File;
 import java.sql.*;
+import java.util.Properties;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -10,28 +12,35 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MySQLHandler implements AutoCloseable {
 	
+	private static final Properties props = new Properties(System.getProperties());
+	private static final String WEBAPPS_PATH = System.getProperty("catalina.home") + File.separator + "webapps" + File.separator;
+	private static final String XML_PATH = WEBAPPS_PATH + "SmallTownShipsConfig.xml";
+	private static final String SSL_PATH = WEBAPPS_PATH + "SSL" + File.separator;
+	private static final String TRUST_PATH = SSL_PATH + "truststore";
+	private static final String KEY_PATH = SSL_PATH + "keystore";
+	
 	static {
-		// Load JDBC SSL settings from XML file
-		String path = System.getProperty("catalina.home") +
-				File.separator + "webapps" + File.separator;
+		// set default connection properties
+		props.setProperty("trustCertificateKeyStoreUrl", "file:" + TRUST_PATH);
+		props.setProperty("clientCertificateKeyStoreUrl", "file:" + KEY_PATH);
+		props.setProperty("allowPublicKeyRetrieval", "true");
+		props.setProperty("serverTimezone", "UTC");
+		props.setProperty("sslMode", "REQUIRED");
+		// Load JDBC connection settings from XML file
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = builder.parse(new File(path + "SmallTownShipsConfig.xml"));
+			Document doc = builder.parse(new File(XML_PATH));
 			Element root = doc.getDocumentElement();
 			root.normalize();
 			// extract truststore and keystore passwords
 			Element db = (Element) root.getElementsByTagName("database").item(0);
 			String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
 			String ks = db.getElementsByTagName("keystore").item(0).getTextContent();
-			System.setProperty("javax.net.ssl.trustStorePassword", ts);
-			System.setProperty("javax.net.ssl.keyStorePassword", ks);
+			props.setProperty("trustCertificateKeyStorePassword", ts);
+			props.setProperty("clientCertificateKeyStorePassword", ks);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		// Set truststore and keystore path
-		path += "SSL" + File.separator;
-		System.setProperty("javax.net.ssl.trustStore", path + "truststore");
-		System.setProperty("javax.net.ssl.keyStore", path + "keystore");
 	}
 	
 	Connection con;
@@ -44,10 +53,14 @@ public class MySQLHandler implements AutoCloseable {
 			Element root = config.getDocumentElement();
 			root.normalize();
 			Element db = (Element) root.getElementsByTagName("database").item(0);
-			String dbpswd = db.getElementsByTagName("password").item(0).getNodeValue();
+			String dbpswd = db.getElementsByTagName("password").item(0).getTextContent();
 			
+			Properties p = new Properties(props);
+			p.setProperty("user", "root");
+			p.setProperty("password", dbpswd);
+
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships?allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", dbpswd);
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships", p);
 			if(con == null) {
 				System.out.println("Not connected to database");
 			}

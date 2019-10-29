@@ -57,7 +57,7 @@ public class EmailVerifier {
 
 	private static final Encoder base64Encode;
 	private static final TreeMap<String,VerificationCode> verificationCodes;
-	private static final Queue<Message> emailQueue;
+	public static final Queue<Message> emailQueue;
 
 	private static final String serverEmailAccount;
 	private static final String serverEmailPassword;
@@ -316,7 +316,7 @@ public class EmailVerifier {
 		}
 	}
 
-	private static class HTMLDataSource implements DataSource {
+	public static class HTMLDataSource implements DataSource {
 		private String html;
 		
 		public HTMLDataSource(String html) {
@@ -361,13 +361,13 @@ public class EmailVerifier {
 					}
 				});
 				if (!oldCodes.isEmpty()) {
-
 					MySQLHandler sqlHandler = new MySQLHandler();
-						// Remove the old codes from the cache
-						oldCodes.forEach((code) -> {
-							verificationCodes.remove(code.code);
-							sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
-						});
+					// Remove the old codes from the cache
+					oldCodes.forEach((code) -> {
+						verificationCodes.remove(code.code);
+						sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
+					});
+					sqlHandler.close();
 				}
 			}
 		}
