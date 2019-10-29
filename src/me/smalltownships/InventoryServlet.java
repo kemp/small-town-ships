@@ -3,6 +3,8 @@ package me.smalltownships;
 import static me.smalltownships.Products.getAllProducts;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import me.smalltownships.MySQLHandler;
 
 /**
  * Servlet implementation class Inventory
@@ -55,14 +56,17 @@ public class InventoryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		MySQLHandler sqlHandler = new MySQLHandler();
 		
-		//sqlHandler.callProcedure("Balance_Inventory")
-		String productName = request.getParameter("name");
-		String quantity = request.getParameter("quantity");
-		sqlHandler.updateTable("UPDATE smalltownships.inventory SET quantity='"+ quantity + "' where name='" + productName+"'");
+		int productId = Integer.parseInt(request.getParameter("productId"));
+		int quantity = Integer.parseInt(request.getParameter("quantity"));
+	
+		//Compile the list of products
+		Map<Product, Integer> productsCheckoutMap = new HashMap<Product, Integer>(); // <Product, quantity>
 		
-		sqlHandler.close();
+		productsCheckoutMap.put(Products.findProductByID(productId), quantity);
+		
+		TransactionHandler.createAdminTransaction(productsCheckoutMap);
+		
     	// Append the list of products to the current request
     	request.setAttribute("inventorymanagement", getAllProducts());
  
@@ -70,6 +74,8 @@ public class InventoryServlet extends HttpServlet {
         // (Users can not access directly into JSP pages placed in WEB-INF)
         RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
         dispatcher.forward(request, response);
+        
+       
 	}
 
 }

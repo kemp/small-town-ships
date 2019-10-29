@@ -2,9 +2,9 @@
 <small_town_ships>
 	<database>
 		<username>root</username>
-		<password>ROOT_USERS_PASSWORD</password>
-		<truststore>TRUSTSTORE_PASSWORD</truststore>
-		<keystore>KEYSTORE_PASSWORD</keystore>
+		<password>123456789</password>
+		<truststore>xxxxxx</truststore>
+		<keystore>xxxxxx</keystore>
 	</database>
 	<email>
 		<username>smalltownships@gmail.com</username>

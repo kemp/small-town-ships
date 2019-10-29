@@ -33,9 +33,6 @@
                 <h1>Description</h1>
                 </th>
                 <th>
-                <h1>Pricing</h1>
-                </th>
-                <th>
                 <h1>Quantity</h1>
                 </th>
                 </tr>
@@ -44,23 +41,19 @@
                         	<form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
                             <td >
                                 <a href="./product?id=<%= product.getId() %>">
-                                    <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>" width="100">
+                                    <img src="<%= product.getImage() %>" class="card-img-top" alt="<%= product.getName() %>">
                                 </a>
                             </td>
-                            <td>                    
-                            	<input class="form-control form-control-sm" type="text" id="name" name="name" required="required" value="<%= product.getName() %>" readonly>  
+                            <td>                  
+                            	<input class="form-control form-control-sm" type="hidden" id ="productId" name="productId" min="1" max="2" value="<%= product.getId() %>">
+                            	<p><%= product.getName() %></p> 
                             </td>
                             <td>
-                                <textarea rows="6" cols="50" id="description" name="description" required="required" readonly><%= product.getDescription() %></textarea>
+                                <p><%= product.getDescription() %></p>
                                 <p>Price: <%= product.getFormattedPrice() %></p>
                             </td>
                             <td style="vertical-align: middle">
-                            	<div class="col-20">
-                            		<input class="form-control form-control-sm" type="number" id ="price" name="price" min="1" max="1000000000000000" placeholder="<%= product.getFormattedPrice() %>" value="<%= product.getStringFormattedPrice() %>" readonly>
-                            	</div>
-                            </td>
-                            <td style="vertical-align: middle">
-                            	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="0" max="100000" value="<%= product.getQuantity() %>">	
+                            	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="<%= (product.getQuantity() * -1)%>" max="100000" placeholder="<%= product.getQuantity() %>" required>	
                             </td>
                             <td style="vertical-align: middle">
                             	<input type="submit" class="btn btn-primary" value="Update">
