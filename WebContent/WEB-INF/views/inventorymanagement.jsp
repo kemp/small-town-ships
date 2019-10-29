@@ -18,7 +18,15 @@
         <jsp:include page="_nav.jsp"></jsp:include>
 
         <div class="container mt-3">
-        <form name="updateInvetoryForm" onsubmit="return validateForm()" action="inventory" method="POST">
+        
+            <% if (request.getAttribute("me.smalltownships.InventoryServlet.success") != null) { %>
+                <div class="alert alert-success">Inventory updated successfully!</div>
+            <% } %>
+            
+            <% if (request.getAttribute("me.smalltownships.InventoryServlet.error") != null) { %>
+                <div class="alert alert-danger">Inventory failed to update!</div>
+            <% } %>
+        
             <table class="table">
             	
                 <tbody>
@@ -53,7 +61,7 @@
                                 <p>Price: <%= product.getFormattedPrice() %></p>
                             </td>
                             <td style="vertical-align: middle">
-                            	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="<%= (product.getQuantity() * -1)%>" max="100000" placeholder="<%= product.getQuantity() %>" required>	
+                            	<input class="form-control form-control-sm" type="number" id ="quantity" name="quantity" min="0" max="100000" placeholder="<%= product.getQuantity() %>" required>	
                             </td>
                             <td style="vertical-align: middle">
                             	<input type="submit" class="btn btn-primary" value="Update">
@@ -64,6 +72,7 @@
                 </tbody>
             </table>
         </div>
+        
         <jsp:include page="_footer.jsp"></jsp:include>
     </body>
 </html>

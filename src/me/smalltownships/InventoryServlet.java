@@ -64,17 +64,22 @@ public class InventoryServlet extends HttpServlet {
 		
 		Product p = Products.findProductByID(productId);
 		
-		if((p.getQuantity()- quantity) < 0)
+		int quantityChange = quantity - p.getQuantity();
+		
+		if(quantity >= 0)
 		{
-			quantity = 0;
+			//Compile the list of products
+			Map<Product, Integer> productsCheckoutMap = new HashMap<Product, Integer>(); // <Product, quantity>
+			
+			productsCheckoutMap.put(Products.findProductByID(productId), quantityChange);
+			
+			TransactionHandler.createAdminTransaction(productsCheckoutMap);
+			
+			request.setAttribute("me.smalltownships.InventoryServlet.success", "true");
+		} else {
+			request.setAttribute("me.smalltownships.InventoryServlet.error", "true");
 		}
 		
-		//Compile the list of products
-		Map<Product, Integer> productsCheckoutMap = new HashMap<Product, Integer>(); // <Product, quantity>
-		
-		productsCheckoutMap.put(Products.findProductByID(productId), quantity);
-		
-		TransactionHandler.createAdminTransaction(productsCheckoutMap);
 		
     	// Append the list of products to the current request
     	request.setAttribute("inventorymanagement", getAllProducts());
@@ -83,8 +88,6 @@ public class InventoryServlet extends HttpServlet {
         // (Users can not access directly into JSP pages placed in WEB-INF)
         RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/inventorymanagement.jsp");
         dispatcher.forward(request, response);
-        
-       
 	}
 
 }
