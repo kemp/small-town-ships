@@ -25,7 +25,6 @@ public class MySQLHandler implements AutoCloseable {
 		props.setProperty("clientCertificateKeyStoreUrl", "file:" + KEY_PATH);
 		props.setProperty("allowPublicKeyRetrieval", "true");
 		props.setProperty("serverTimezone", "UTC");
-		props.setProperty("sslMode", "REQUIRED");
 		// Load JDBC connection settings from XML file
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -34,10 +33,14 @@ public class MySQLHandler implements AutoCloseable {
 			root.normalize();
 			// extract truststore and keystore passwords
 			Element db = (Element) root.getElementsByTagName("database").item(0);
-			String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
-			String ks = db.getElementsByTagName("keystore").item(0).getTextContent();
-			props.setProperty("trustCertificateKeyStorePassword", ts);
-			props.setProperty("clientCertificateKeyStorePassword", ks);
+			String ssl = db.getElementsByTagName("sslmode").item(0).getTextContent();
+			props.setProperty("sslMode", ssl);
+			if (!ssl.equals("DISABLED")) {
+				String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
+				String ks = db.getElementsByTagName("keystore").item(0).getTextContent();
+				props.setProperty("trustCertificateKeyStorePassword", ts);
+				props.setProperty("clientCertificateKeyStorePassword", ks);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

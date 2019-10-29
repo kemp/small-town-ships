@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
 
 /**
  * Servlet implementation class Controller
@@ -30,7 +29,10 @@ public class LoginServlet extends HttpServlet {
 		if (loginHandler.tryLogin(username, password)) {
 			response.sendRedirect("products");
 		} else {
-			response.sendRedirect("./?error=incorrect-password"); // Incorrect password
+			// Incorrect username or password
+			request.setAttribute("me.smalltownships.login.loginerr",
+					"Incorrect username or password");
+			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}
 		
 	}

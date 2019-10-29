@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <jsp:include page="/WEB-INF/views/_head.jsp" />
-    <jsp:include page="/WEB-INF/views/_nav.jsp" />
     <%
     if (Boolean.TRUE.equals(request.getAttribute("me.smalltownships.Register.err"))) {
     %>
@@ -18,6 +17,7 @@
     <% } %>
   </head>
   <body class="bg-light">
+  <jsp:include page="/WEB-INF/views/_nav.jsp" />
   <br>
   <br>
   <br>
@@ -31,7 +31,7 @@
     String msg = (String)request.getAttribute("me.smalltownships.Register.fnerrmsg");
     if (msg != null) {
     %>
-    <br> <span id="err"><%= msg %></span>
+    <span id="err"><%= msg %></span><br>
     <% } %>
     <label for="LastName" class="col-form-label col-form-label-lg">Last Name:</label>
     <input type="text" class="form-control form-control-lg" id="LastName" name="LastName" placeholder="Last Name" required="required">
@@ -39,7 +39,7 @@
     msg = (String)request.getAttribute("me.smalltownships.Register.lnerrmsg");
     if (msg != null) {
     %>
-    <br> <span id="err"><%= msg %></span>
+    <span id="err"><%= msg %></span><br>
     <% } %>
     <label for="UserName" class="col-form-label col-form-label-lg">User Name:</label>
     <input type="text" class="form-control form-control-lg" id="UserName" name="UserName" placeholder="Username"  required="required">
@@ -47,7 +47,7 @@
     msg = (String)request.getAttribute("me.smalltownships.Register.unerrmsg");
     if (msg != null) {
     %>
-    <br> <span id="err"><%= msg %></span>
+    <span id="err"><%= msg %></span><br>
     <% } %>
     <label for="inputEmail" class="col-form-label col-form-label-lg">Email</label>
     <input type="email" class="form-control form-control-lg" id="inputEmail" name="inputEmail" placeholder="Email" required="required">
@@ -55,7 +55,7 @@
     msg = (String)request.getAttribute("me.smalltownships.Register.emerrmsg");
     if (msg != null) {
     %>
-    <br> <span id="err"><%= msg %></span>
+    <span id="err"><%= msg %></span><br>
     <% } %>
     <label for="inputPassword" class="col-form-label col-form-label-lg">Password</label>
     <input type="password" class="form-control form-control-lg" id="inputPassword" name="inputPassword" placeholder="Password" required="required">
@@ -63,7 +63,7 @@
     msg = (String)request.getAttribute("me.smalltownships.Register.pwerrmsg");
     if (msg != null) {
     %>
-    <br> <span id="err"><%= msg %></span>
+    <span id="err"><%= msg %></span><br>
     <% } %>
     <br>
     <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
