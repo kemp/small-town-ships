@@ -4,6 +4,7 @@ import static me.smalltownships.Products.getProducts;
 
 import java.io.IOException;
 
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import me.smalltownships.Products;
 import me.smalltownships.Product;
@@ -86,8 +84,17 @@ public class CheckoutServlet extends HttpServlet {
 			productsCheckoutMap.put(Products.findProductByID(productId), productQuantity);
 		}
 		
+		// Create the transaction in the Database
 		TransactionHandler.createTransaction(productsCheckoutMap, deliveryAddress, creditCardNumber, creditCardExpiration);
 		
+		// Send the user a confirmation email.
+		String email = (new LoginHandler()).loggedInEmail();
+		
+		try {
+			EmailVerifier.sendEmail(email, "Order confirmed!", "Thank you for your order with Small Town Ships.");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 		
 		// Show the user that the request has submitted successfully
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/confirmation.jsp");
