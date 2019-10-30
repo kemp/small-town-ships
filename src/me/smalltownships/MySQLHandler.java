@@ -31,7 +31,7 @@ public class MySQLHandler implements AutoCloseable {
 			root.normalize();
 			// extract truststore and keystore passwords
 			Element db = (Element) root.getElementsByTagName("database").item(0);
-			String ssl = db.getElementsByTagName("sslmode").item(0).getTextContent();
+			String ssl = db.getElementsByTagName("sslMode").item(0).getTextContent();
 			props.setProperty("sslMode", ssl);
 			if (!ssl.equals("DISABLED")) {
 				String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
