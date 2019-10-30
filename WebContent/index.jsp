@@ -26,10 +26,9 @@ if ((new LoginHandler()).isLoggedIn()) {
     	    	<input type="password" class="form-control" id="password" placeholder="Password" name="password">
     		</div>
 			<%
-			String msg = (String)request.getAttribute("me.smalltownships.login.loginerr");
-			if (msg != null) {
+			if (request.getAttribute("me.smalltownships.login.loginerr") != null) {
 			%>
-			<span style="color:red;font-weight:bold;"><%= msg %></span>
+			<span style="color:red;font-weight:bold;">Incorrect username or password</span>
 			<% } %>
     		<button type="submit" class="btn btn-primary">Login</button>
     		<br>

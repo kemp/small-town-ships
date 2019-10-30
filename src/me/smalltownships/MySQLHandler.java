@@ -33,6 +33,7 @@ public class MySQLHandler implements AutoCloseable {
 			Element db = (Element) root.getElementsByTagName("database").item(0);
 			String ssl = db.getElementsByTagName("sslmode").item(0).getTextContent();
 			props.setProperty("sslMode", ssl);
+			// if SSL is disabled, don't load SSL settings
 			if (!ssl.equals("DISABLED")) {
 				String ts = db.getElementsByTagName("truststore").item(0).getTextContent();
 				String ks = db.getElementsByTagName("keystore").item(0).getTextContent();

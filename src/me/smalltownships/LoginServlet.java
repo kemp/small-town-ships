@@ -30,8 +30,7 @@ public class LoginServlet extends HttpServlet {
 			response.sendRedirect("products");
 		} else {
 			// Incorrect username or password
-			request.setAttribute("me.smalltownships.login.loginerr",
-					"Incorrect username or password");
+			request.setAttribute("me.smalltownships.login.loginerr", Boolean.TRUE);
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}
 		
