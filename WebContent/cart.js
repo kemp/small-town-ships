@@ -1,4 +1,5 @@
 (function(window, document) {
+    'use strict';
 	
 	var cartEl = document.getElementById('cart');
 	var checkoutButton, cartTotalEl, cartTotalPluralEl;
@@ -42,14 +43,15 @@
 	}
 	
 	function formatAsCurrency(amount) {
-		return amount.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2})
+		return amount.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 2});
 	}
 	
 	function getItemTotal() {
 		var total = 0;
-		
+
 		for (var key in items) {
-			total += items[key]["price"];
+		    if (items.hasOwnProperty(key))
+                total += items[key].price;
 		}
 		
 		return formatAsCurrency(total);
@@ -90,25 +92,27 @@
 		checkoutInputEl.value = '';
 		
 		for (const productId in items) {
-			let productName = itemNames[productId];
-			let productQty = items[productId].quantity;
-			let productPrice = items[productId].price;
-			
-			let html = `
+		    if (items.hasOwnProperty(productId)) {
+				let productName = itemNames[productId];
+				let productQty = items[productId].quantity;
+				let productPrice = items[productId].price;
+
+				let html = `
 				<td>${productName}</td>
 				<td>${productQty}</td>
 				<td>${formatAsCurrency(productPrice)}</td>
 				<td><button class="btn btn-danger" onclick="window.removeItem(${productId}); location.reload()">&times;</button></td>
 			`;
-			
-			let node = document.createElement('tr');
-			node.innerHTML = html;
-			
-			checkoutEl.appendChild(node);
-			
-			// Update checkout input
-			// Format: id,qty,;id2,qty2;...
-			checkoutInputEl.value += productId + ',' + productQty + ';';
+
+				let node = document.createElement('tr');
+				node.innerHTML = html;
+
+				checkoutEl.appendChild(node);
+
+				// Update checkout input
+				// Format: id,qty,;id2,qty2;...
+				checkoutInputEl.value += productId + ',' + productQty + ';';
+			}
 		}
 		
 		if (isCartEmpty()) {
@@ -131,8 +135,8 @@
 		
 		var qty = parseInt(quantity) || 0;
 		
-		items[id]["quantity"] += qty;
-		items[id]["price"] += price * qty;
+		items[id].quantity += qty;
+		items[id].price += price * qty;
 				
 		updateItemTotal();
 		
@@ -163,7 +167,7 @@
 	function getCartQuantityForProduct(productId) {
 		if (! items[productId]) return 0;
 		
-		return items[productId]["quantity"] || 0;
+		return items[productId].quantity || 0;
 	}
 	
 	if (isCartVisible()) {
