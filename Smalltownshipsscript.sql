@@ -30,8 +30,8 @@ CREATE TABLE `ims` (
   `quantity` int(11) NOT NULL,
   KEY `items_idx` (`itemID`),
   KEY `trans_idx` (`transID`),
-  CONSTRAINT `items` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `trans` FOREIGN KEY (`transID`) REFERENCES `transactions` (`transid`) ON UPDATE CASCADE
+  CONSTRAINT `items` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `trans` FOREIGN KEY (`transID`) REFERENCES `transactions` (`transid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -68,6 +68,7 @@ CREATE TABLE `inventory` (
 --
 -- Dumping data for table `inventory`
 --
+-- ORDER BY:  `id`
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
@@ -91,13 +92,14 @@ CREATE TABLE `transactions` (
   `deliveryAddress` tinytext,
   PRIMARY KEY (`transid`),
   KEY `username_idx` (`username`),
-  CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `verifiedaccounts` (`username`)
+  CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `verifiedaccounts` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `transactions`
 --
+-- ORDER BY:  `transid`
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
@@ -154,16 +156,44 @@ CREATE TABLE `verifiedaccounts` (
 --
 -- Dumping data for table `verifiedaccounts`
 --
+-- ORDER BY:  `username`
 
 LOCK TABLES `verifiedaccounts` WRITE;
 /*!40000 ALTER TABLE `verifiedaccounts` DISABLE KEYS */;
-INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','smalltownships@gmail.com',0,01);
+INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',0,01);
 /*!40000 ALTER TABLE `verifiedaccounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
+-- Dumping events for database 'smalltownships'
+--
+
+--
 -- Dumping routines for database 'smalltownships'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `All_Products` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `All_Products`()
+BEGIN
+-- fetches every product in inventory
+SELECT 
+	*
+FROM
+	smalltownships.inventory;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `Balance_Inventory` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -176,37 +206,22 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Balance_Inventory`()
 BEGIN
-declare q1, q2, q3 int;
-select 
-	sum(quantity) into
-	q1
-from 
-	smalltownships.ims
-where
-	itemID = 1;
-select 
-	sum(quantity) into
-	q2
-from 
-	smalltownships.ims
-where
-	itemID = 2;
-select 
-	sum(quantity) into
-	q3
-from 
-	smalltownships.ims
-where
-	itemID = 3;
-update inventory
-set quantity = q1
-where id = 1;
-update inventory
-set quantity = q2
-where id = 2;
-update inventory
-set quantity = q3
-where id = 3;
+UPDATE
+	inventory
+INNER JOIN
+	(
+	SELECT
+		itemID AS id,
+        sum(quantity) AS quantsum
+    FROM
+		smalltownships.ims
+	GROUP BY
+		id
+	) tmp
+ON
+	inventory.id = tmp.id
+SET
+	inventory.quantity = tmp.quantsum;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -226,11 +241,11 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_Unverified_User`(in fName varchar(20), in lName varchar(30), in uname varchar(20), in pass varchar(25), in address varchar(60))
 BEGIN
 -- Adds user to unverifiedaccounts table
-insert into 
+INSERT INTO 
 	smalltownships.unverifiedaccounts
 VALUES
 	(fName, lName, uname, pass, address, curdate());
-select * from smalltownships.unverifiedaccounts where username = uname;
+SELECT * FROM smalltownships.unverifiedaccounts WHERE username = uname;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -250,14 +265,16 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Email_Exists`(in address varchar(60))
 BEGIN
 -- retrieves any users with email that matches the input
-select username from
+SELECT
+	username
+FROM
 	smalltownships.verifiedaccounts
-where
+WHERE
 	email = address
-union
-select username from
+UNION
+SELECT username FROM
 	smalltownships.unverifiedaccounts
-where
+WHERE
 	email = address;
 END ;;
 DELIMITER ;
@@ -278,13 +295,13 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Get_Permission_Level`()
 BEGIN
 -- returns the permission level of the user (if any) that is logged in currently
-select
+SELECT
 	permission
-from
+FROM
 	smalltownships.verifiedaccounts
-where
+WHERE
 	login = 1
-    limit 1;
+    LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -305,16 +322,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `LoggedIn`()
 BEGIN
 -- used to find first and last name of logged in user
 -- also used to check if anyone is logged in, otherwise it will be empty
-select
+SELECT
 	firstname,
     lastname,
     username,
     email
-from
+FROM
 	smalltownships.verifiedaccounts
-where
+WHERE
 	login=1
-    limit 1;
+    LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -333,9 +350,9 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `New_IMS_Transaction`(in id int, in item int, in quant int)
 BEGIN
-insert into
-	smalltownships.ims
-values (
+INSERT INTO
+	ims
+VALUES (
 	id,
     item,
     quant );
@@ -358,9 +375,9 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `New_Transaction`(in id int(11), in uname varchar(20), in cost decimal(15,0), in card varchar(16), in exp varchar(7), in address tinytext)
 BEGIN
 -- creates new transaction entry in transaction table
-insert into
+INSERT INTO
 	smalltownships.transactions
-values (
+VALUES (
 	id,
     uname,
     cost,
@@ -386,12 +403,15 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Next_Trans_ID`()
 BEGIN
 -- returns the value the next transaction id should be
-declare  a, b int;
-select MAX(transid)
-into a
-from smalltownships.transactions;
-set b = a + 2;
-select b;
+DECLARE a, b int;
+SELECT
+	MAX(transid)
+INTO
+	a
+FROM
+	smalltownships.transactions;
+SET b = a + 2;
+SELECT b;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -411,13 +431,13 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Remove_User`(IN uname varchar(20))
 BEGIN
 -- used to delete user accounts from both account tables
-delete from
-	smalltownships.verifiedaccounts
-where
+DELETE FROM
+	verifiedaccounts
+WHERE
 	username = uname;
-delete from
-	smalltownships.unverifiedaccounts
-where
+DELETE FROM
+	unverifiedaccounts
+WHERE
 	username = uname;
 END ;;
 DELIMITER ;
@@ -438,11 +458,11 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Search_Unverified_User`(in uname varchar(20))
 BEGIN
 -- used to select data from unverifiedaccounts table for verification purposes
-select
+SELECT
 	*
-from
+FROM
 	smalltownships.unverifiedaccounts
-where
+WHERE
 	username = uname;
 END ;;
 DELIMITER ;
@@ -463,14 +483,14 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Search_Verified_User`(id varchar(60))
 BEGIN
 -- Searches for user whose username or email matches the input parameter
-	select 
-		* 
-	from 
-		verifiedaccounts 
-        where 
-        email like id or
-        username like id
-        ;
+SELECT 
+	* 
+FROM 
+	verifiedaccounts 
+WHERE
+	email LIKE id
+OR
+	username LIKE id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -490,35 +510,12 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Stocked_Products`()
 BEGIN
 -- fetches each product whose quantity in inventory is > 0
-select 
+SELECT 
 	*
-from
-	smalltownships.inventory
-where 
+FROM
+	inventory
+WHERE 
 	quantity > 0;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `All_Products` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `All_Products`()
-BEGIN
--- fetches every product in inventory
-select 
-	*
-from
-	smalltownships.inventory;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -538,12 +535,13 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Try_Login`(in uname varchar(20), in pass varchar(25))
 BEGIN
 -- fetches username, password from verifiedaccounts table if both match
-select
+SELECT
 	username
-from
-	smalltownships.verifiedaccounts
-where
-	username = uname AND
+FROM
+	verifiedaccounts
+WHERE
+	username = uname
+AND
     password = pass;
 END ;;
 DELIMITER ;
@@ -566,12 +564,18 @@ BEGIN
 -- Used to set login flag of user whose name is supplied
 -- If 0 flag is given, then it doesn't matter what user name is
 	-- all users will have login flag set to 0
-if flag = 1 then
-	update smalltownships.verifiedaccounts
-    set login = flag
-    where username = id;
-elseif flag = 0 then
-	update smalltownships.verifiedaccounts set login = 0;
+IF flag = 1 THEN
+	UPDATE
+		verifiedaccounts
+    SET
+		login = flag
+    WHERE
+		username = id;
+ELSEIF flag = 0 THEN
+	UPDATE
+		verifiedaccounts
+	SET
+		login = 0;
 end if;
 END ;;
 DELIMITER ;
@@ -592,11 +596,11 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Update_Permission`(in uname varchar(20), in perm tinyint)
 BEGIN
 -- allows update of user permission level
-update
-	smalltownships.verifiedaccounts
-set
+UPDATE
+	verifiedaccounts
+SET
 	permission = perm
-where
+WHERE
 	username = uname;
 END ;;
 DELIMITER ;
@@ -617,14 +621,18 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `User_Exists`(IN uname varchar(20))
 BEGIN
 -- retrieves any users with username that matches the input
-select username from
-	smalltownships.verifiedaccounts
-where
+SELECT
+	username
+FROM
+	verifiedaccounts
+WHERE
 	username = uname
-union
-select username from
-	smalltownships.unverifiedaccounts
-where
+UNION
+SELECT
+	username
+FROM
+	unverifiedaccounts
+WHERE
 	username = uname;
 END ;;
 DELIMITER ;
@@ -645,25 +653,26 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Verify_User`(in uname varchar(20))
 BEGIN
 -- moves user from unverifiedaccounts table to verifiedaccounts table
-insert into
-	smalltownships.verifiedaccounts (
+INSERT INTO
+	verifiedaccounts (
 		firstName,
         lastName,
         username,
         password,
         email )
-	select
+SELECT
 		firstName,
         lastName,
         username,
         password,
         email
-	from
+FROM
 		smalltownships.unverifiedaccounts
-	where
+WHERE
 		username = uname;
-delete from smalltownships.unverifiedaccounts
-where
+DELETE FROM
+	unverifiedaccounts
+WHERE
 	username = uname;
 END ;;
 DELIMITER ;
@@ -681,4 +690,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-27 15:04:44
+-- Dump completed
