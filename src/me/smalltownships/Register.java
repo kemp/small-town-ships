@@ -154,7 +154,6 @@ public class Register extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String firstName, lastName, username, email, password;
-		String msg = "";
 		firstName = req.getParameter("FirstName");
 		lastName = req.getParameter("LastName");
 		username = req.getParameter("UserName");
@@ -182,11 +181,7 @@ public class Register extends HttpServlet {
 			}
 		} catch (Exception e) {
 			// account could not be created
-			msg = "Account could not be created due to the following error: " + e;
-			req.setAttribute("me.smalltownships.Register.errmsg", msg);
-			req.setAttribute("me.smalltownships.Register.err", Boolean.TRUE);
-			RequestDispatcher dispatch = req.getRequestDispatcher("register.jsp");
-			dispatch.forward(req, resp);
+			throw new RuntimeException("Account could not be created", e);
 		}
 	}
 	

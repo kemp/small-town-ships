@@ -35,6 +35,9 @@ public class TransactionHandler extends InteractsWithSQL {
 			
 			// Username of the currently logged in user
 			String user = (new LoginHandler()).loggedInUsername();
+			if (user == null) {
+				throw new RuntimeException("No logged-in user");
+			}
 			
 			// Create a user transaction using "New_Transaction" stored procedure
 			sqlHandler.callProcedure("New_Transaction(?,?,?,?,?,?)", 6, new String[] {
@@ -58,7 +61,7 @@ public class TransactionHandler extends InteractsWithSQL {
 			// Balance the inventory afterward
 			sqlHandler.callProcedure("Balance_Inventory()");
 		} catch (SQLException e) {
-			e.printStackTrace(); // TODO: Show error to user
+			throw new RuntimeException("Could not process transaction", e);
 		}
 	}
 	

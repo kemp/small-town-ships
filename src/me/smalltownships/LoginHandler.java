@@ -44,7 +44,15 @@ public class LoginHandler {
 		if (user.length() > 20 || password.length() > 25) {
 			return false;
 		}
-		ResultSet rs = sqlHandler.callProcedure("Try_Login(?,?)", 2, new String[] {user, password});
+		
+		ResultSet rs;
+		try {
+			rs = sqlHandler.callProcedure("Try_Login(?,?)", 2, new String[] {user, password});
+		} catch (Exception e) {
+			System.err.println("Exception in calling Try_Login(" + user + "," + password + ")");
+			e.printStackTrace();
+			return false;
+		}
 
 		try {
 			if (rs.next()) {
@@ -52,6 +60,7 @@ public class LoginHandler {
 				return true;
 			}
 		} catch (SQLException e) {
+			System.err.println("Exception in calling Update_Login(" + user + ",1)");
 			e.printStackTrace();
 		}
 		return false;
@@ -64,12 +73,13 @@ public class LoginHandler {
 	 * @return boolean whether a user is logged in
 	 */
 	public boolean isLoggedIn() {
-		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 		try {
+			ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 			if(rs.next()) {
 				return true;
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			System.err.println("Exception in calling LoggedIn()");
 			e.printStackTrace();
 		}
 		return false;
@@ -77,10 +87,9 @@ public class LoginHandler {
 	/*
 	 * Check if the user is an admin
 	 */
-	public boolean isAdmin()
-	{
-		ResultSet rs = sqlHandler.callProcedure("Get_Permission_Level()");
+	public boolean isAdmin() {
 		try {
+			ResultSet rs = sqlHandler.callProcedure("Get_Permission_Level()");
 			/*rs.next();
 			String permissionlvl = rs.getString("permission");
 			System.out.println(permissionlvl);
@@ -88,13 +97,14 @@ public class LoginHandler {
 			{
 				return true;
 			}*/
-			if(rs.next())
-			{
+			if(rs.next()) {
 				int i = Integer.parseInt(rs.getString("permission"));
-				if(i == 1) 
+				if(i == 1) {
 					return true;
+				}
 			}
 		} catch (SQLException e) {
+			System.err.println("Exception in calling Get_Permission_Level()");
 			e.printStackTrace();
 		}
 		return false;
@@ -111,13 +121,13 @@ public class LoginHandler {
 			return null;
 		}
 		
-		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
-		
 		try {
+			ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 			if(rs.next()) {
 				return rs.getString("firstName") + " " + rs.getString("lastName");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			System.err.println("Exception in calling LoggedIn()");
 			e.printStackTrace();
 		}
 		return null;
@@ -134,13 +144,13 @@ public class LoginHandler {
 			return null;
 		}
 		
-		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
-		
 		try {
+			ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 			if(rs.next()) {
 				return rs.getString("username");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			System.err.println("Exception in calling LoggedIn()");
 			e.printStackTrace();
 		}
 		return null;
@@ -157,13 +167,13 @@ public class LoginHandler {
 			return null;
 		}
 		
-		ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
-		
 		try {
+			ResultSet rs = sqlHandler.callProcedure("LoggedIn()");
 			if(rs.next()) {
 				return rs.getString("email");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			System.err.println("Exception in calling LoggedIn()");
 			e.printStackTrace();
 		}
 		return null;
@@ -175,14 +185,14 @@ public class LoginHandler {
 	 * @param email The email address to check for
 	 * @return True if an account has the email address "email"
 	 */
-	public boolean emailExists(String email) {
-
-		ResultSet rs = sqlHandler.callProcedure("Email_Exists(?)", 1, new String[] {email});	
+	public boolean emailExists(String email) {	
 		try {
+			ResultSet rs = sqlHandler.callProcedure("Email_Exists(?)", 1, new String[] {email});
 			if(rs.next()) {
 				return true;
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
+			System.err.println("Exception in calling Email_Exists(" + email + ")");
 			e.printStackTrace();
 		}
 		return false;
@@ -197,12 +207,13 @@ public class LoginHandler {
 	 * @return True if an account has the username "user"
 	 */
 	public boolean usernameExists(String user) {
-		ResultSet rs = sqlHandler.callProcedure("User_Exists(?)", 1, new String[] {user});
 		try {
+			ResultSet rs = sqlHandler.callProcedure("User_Exists(?)", 1, new String[] {user});
 			if(rs.next()) {
 				return true;
 			}
 		} catch (SQLException e) {
+			System.err.println("Exception in calling User_Exists(" + user + ")");
 			e.printStackTrace();
 		}
 		return false;
@@ -222,7 +233,13 @@ public class LoginHandler {
 		} else if (emailExists(email)) {
 			return false;
 		} else {
-			sqlHandler.callProcedure("Create_Unverified_User(?,?,?,?,?)", 5, new String[] {fName, lName, user, password, email});
+			try {
+				sqlHandler.callProcedure("Create_Unverified_User(?,?,?,?,?)", 5, new String[] {fName, lName, user, password, email});
+			} catch (Exception e) {
+				System.err.println("Exception in calling Create_Unverified_User(" + fName + "," + lName + "," + user + "," + password + "," + email + ")");
+				e.printStackTrace();
+				return false;
+			}
 			return true;
 		}
 	}
@@ -231,6 +248,10 @@ public class LoginHandler {
 	 * Logout all users (should only be one)
 	 */
 	public void logout() {
-		sqlHandler.callProcedure("Update_Login(?,?)", 2, new String[] {"", "0"});
+		try {
+			sqlHandler.callProcedure("Update_Login(?,?)", 2, new String[] {"", "0"});
+		} catch (Exception e) {
+			throw new RuntimeException("Exception in calling Update_Login('',0)");
+		}
 	}
 }

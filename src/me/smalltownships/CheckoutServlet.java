@@ -4,7 +4,6 @@ import static me.smalltownships.Products.getProducts;
 
 import java.io.IOException;
 
-import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -92,8 +91,8 @@ public class CheckoutServlet extends HttpServlet {
 		
 		try {
 			EmailVerifier.sendEmail(email, "Order confirmed!", "Thank you for your order with Small Town Ships.");
-		} catch (MessagingException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException("Could not send confirmation email to " + email, e);
 		}
 		
 		// Show the user that the request has submitted successfully

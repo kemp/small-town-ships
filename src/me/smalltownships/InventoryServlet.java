@@ -1,12 +1,7 @@
 package me.smalltownships;
 
-import static me.smalltownships.Products.getAllProducts;
-import static me.smalltownships.Products.findProductByID;
-
-
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -38,15 +33,14 @@ public class InventoryServlet extends HttpServlet {
 		// Ensure the user is authenticated
 		LoginHandler loginHandler = new LoginHandler();
 		
-		if (! loginHandler.isLoggedIn()) {
+		if (!loginHandler.isLoggedIn()) {
 			// User is unauthorized, take them to the login page.
 			response.sendRedirect("./");
-			
 			return;
 		}
     	
     	// Append the list of products to the current request
-    	request.setAttribute("inventorymanagement", getAllProducts());
+    	request.setAttribute("inventorymanagement", Products.getAllProducts());
  
         // Forward to /WEB-INF/views/products.jsp
         // (Users can not access directly into JSP pages placed in WEB-INF)
@@ -82,7 +76,7 @@ public class InventoryServlet extends HttpServlet {
 		
 		
     	// Append the list of products to the current request
-    	request.setAttribute("inventorymanagement", getAllProducts());
+    	request.setAttribute("inventorymanagement", Products.getAllProducts());
  
         // Forward to /WEB-INF/views/products.jsp
         // (Users can not access directly into JSP pages placed in WEB-INF)

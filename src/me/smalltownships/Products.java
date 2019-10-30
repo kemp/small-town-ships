@@ -1,7 +1,6 @@
 package me.smalltownships;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class Products extends InteractsWithSQL {
 	public static List<Product> getProducts() {
     	List<Product> productsList = new ArrayList<Product>();
     	
-    	ResultSet rs = sqlHandler.callProcedure("Stocked_Products");
+    	ResultSet rs = sqlHandler.callProcedure("Stocked_Products()");
     	
     	try {
 			while (rs.next()) {
@@ -34,8 +33,8 @@ public class Products extends InteractsWithSQL {
 					rs.getString("url")
 				));
 			}
-		} catch (SQLException e) {
-			e.printStackTrace(); // TODO: Show error to user
+		} catch (Exception e) {
+			throw new RuntimeException("Exception getting stocked products", e);
 		}
     	
     	return productsList;
@@ -49,7 +48,7 @@ public class Products extends InteractsWithSQL {
 	public static List<Product> getAllProducts() {
     	List<Product> productsList = new ArrayList<Product>();
     	
-    	ResultSet rs = sqlHandler.callProcedure("All_Products");
+    	ResultSet rs = sqlHandler.callProcedure("All_Products()");
     	
     	try {
 			while (rs.next()) {
@@ -63,8 +62,8 @@ public class Products extends InteractsWithSQL {
 					rs.getString("url")
 				));
 			}
-		} catch (SQLException e) {
-			e.printStackTrace(); // TODO: Show error to user
+		} catch (Exception e) {
+			throw new RuntimeException("Exception getting all products", e);
 		}
     	
     	return productsList;

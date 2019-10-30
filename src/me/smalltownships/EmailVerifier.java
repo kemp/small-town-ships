@@ -131,7 +131,7 @@ public class EmailVerifier {
 			sqlHandler.callProcedure("Verify_User(?)", 1, new String[] {user});
 			return true;
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not verify user " + user, e);
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class EmailVerifier {
 			synchronized (verificationCodes) {
 				verificationCodes.remove(page.code);
 			}
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not send verification email to " + email, e);
 		}
 	}
 	
@@ -206,6 +206,7 @@ public class EmailVerifier {
 		/***** Email Setup *****/
 		// Retrieve the email account's username, password, and SMTP properties from the
 		// config file
+		Properties props = new Properties(System.getProperties());
 		String username, password;
 		String xmlPath = System.getProperty("catalina.home") +
 				File.separator + "webapps" + File.separator + "SmallTownShipsConfig.xml";
@@ -222,23 +223,22 @@ public class EmailVerifier {
 			// Get account password
 			password = node.getElementsByTagName("password").item(0).getTextContent();
 			// Get SMTP settings
-			NodeList props = node.getElementsByTagName("property");
+			NodeList propList = node.getElementsByTagName("property");
 			// Parse SMTP settings
-			for (int i = 0; i < props.getLength(); i++) {
-				Element e = (Element) props.item(i);
+			for (int i = 0; i < propList.getLength(); i++) {
+				Element e = (Element) propList.item(i);
 				String key = e.getElementsByTagName("key").item(0).getTextContent();
 				String value = e.getElementsByTagName("value").item(0).getTextContent();
-				System.setProperty(key, value);
+				props.setProperty(key, value);
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not parse email settings", e);
 		}
 		serverEmailAccount = username;
 		serverEmailPassword = password;
 		WEB_ADDRESS = "http://localhost:8080/small-town-ships/verify.jsp";
 
 		/***** Background Process Setup *****/
-		Properties props = System.getProperties();
 		Authenticator auth = new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(serverEmailAccount, serverEmailPassword);
@@ -248,7 +248,7 @@ public class EmailVerifier {
 		try {
 			from = new InternetAddress(username);
 		} catch (AddressException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Could not create InternetAddress object from email address " + username, e);
 		}
 		EMAIL_SESSION = Session.getInstance(props, auth);
 		FROM_ADDRESS = from;
@@ -369,7 +369,12 @@ public class EmailVerifier {
 					// Remove the old codes from the cache
 					oldCodes.forEach((code) -> {
 						verificationCodes.remove(code.code);
-						sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
+						try {
+							sqlHandler.callProcedure("Delete_User(?)", 1, new String[] {code.username});
+						} catch (Exception e) {
+							System.err.println("Exception in calling Delete_User(" + code.username + ")");
+							e.printStackTrace();
+						}
 					});
 					sqlHandler.close();
 				}
@@ -425,7 +430,8 @@ public class EmailVerifier {
 					// Close SMTP server connection
 					t.close();
 				} catch (MessagingException e) {
-					throw new RuntimeException(e);
+					System.err.println("Exception in sending email");
+					e.printStackTrace();
 				}
 			}
 		}
