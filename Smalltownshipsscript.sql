@@ -157,7 +157,7 @@ CREATE TABLE `verifiedaccounts` (
 
 LOCK TABLES `verifiedaccounts` WRITE;
 /*!40000 ALTER TABLE `verifiedaccounts` DISABLE KEYS */;
-INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',0,01);
+INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','smalltownships@gmail.com',0,01);
 /*!40000 ALTER TABLE `verifiedaccounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
