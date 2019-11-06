@@ -15,6 +15,7 @@
           <element id="file-copy" path="$PROJECT_DIR$/WebContent/WEB-INF/lib/javax.mail.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/WebContent/WEB-INF/lib/mysql-connector-java.jar" />
         </element>
+        <element id="dir-copy" path="$PROJECT_DIR$/WebContent/WEB-INF/views" />
       </element>
     </root>
   </artifact>
