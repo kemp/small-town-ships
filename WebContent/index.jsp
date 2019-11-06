@@ -19,7 +19,7 @@ if ((new LoginHandler()).isLoggedIn()) {
     		<h1>Login</h1>
     	 	<div class="form-group">
     	    	<label for="username">Username</label>
-    	    	<input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email" name="username">
+    	    	<input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
     		</div>
     		<div class="form-group">
     	    	<label for="password">Password</label>
