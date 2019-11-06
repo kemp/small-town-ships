@@ -20,7 +20,7 @@ public class TransactionHandler extends InteractsWithSQL {
 		sqlHandler.callProcedure("Balance_Inventory()");
 	}
 
-	public static void createTransaction(Map<Product, Integer> products, String deliveryAddress, String creditCardNumber, String creditCardExpiration) {
+	public static void createTransaction(User user, Map<Product, Integer> products, String deliveryAddress, String creditCardNumber, String creditCardExpiration) {
 		try {
 			// Get the ID of the next transaction
 			ResultSet rs = sqlHandler.callProcedure("Next_Trans_ID()");
@@ -34,15 +34,12 @@ public class TransactionHandler extends InteractsWithSQL {
 			}
 			
 			// Username of the currently logged in user
-			String user = (new LoginHandler()).loggedInUsername();
-			if (user == null) {
-				throw new RuntimeException("No logged-in user");
-			}
-			
+			String username = user.getUsername();
+
 			// Create a user transaction using "New_Transaction" stored procedure
 			sqlHandler.callProcedure("New_Transaction(?,?,?,?,?,?)", 6, new String[] {
 				Integer.toString(transactionId),
-				user,
+				username,
 				Long.toString(computeGrandTotal(products)),
 				creditCardNumber,
 				creditCardExpiration,

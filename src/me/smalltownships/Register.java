@@ -23,14 +23,12 @@ public class Register extends HttpServlet {
 	private static final Pattern PASSWORD_REGEX = Pattern.compile(
 			"[\\w!@#\\$%\\^\\&\\*\\-=\\+\\|\\\\\\?/]+");
 	
-	LoginHandler lh = new LoginHandler();
-	
 	private String emailExists(MySQLHandler handler, String email) throws SQLException {
-		return lh.emailExists(email) ? "Email already exists!" : null;
+		return User.emailExists(email) ? "Email already exists!" : null;
 	}
 
 	private String userExists(MySQLHandler handler, String user) throws SQLException {
-		return lh.usernameExists(user) ? "Username already exists!" : null;
+		return User.usernameExists(user) ? "Username already exists!" : null;
 	}
 	
 	private void createNewAccount(MySQLHandler handler, String firstName, String lastName,

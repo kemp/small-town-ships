@@ -28,9 +28,7 @@ public class ProductsShowServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// Ensure the user is authenticated
-		LoginHandler loginHandler = new LoginHandler();
-		
-		if (! loginHandler.isLoggedIn()) {
+		if (! User.isLoggedIn(request.getSession())) {
 			// User is unauthorized, take them to the login page.
 			response.sendRedirect("./");
 			
