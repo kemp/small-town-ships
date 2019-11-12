@@ -30,15 +30,23 @@ public class InventoryServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User user = User.loggedInUser(request.getSession());
+
 		// Ensure the user is authenticated
-		LoginHandler loginHandler = new LoginHandler();
-		
-		if (!loginHandler.isLoggedIn()) {
-			// User is unauthorized, take them to the login page.
+		if (user == null) {
+			// User is unauthenticated, take them to the login page.
 			response.sendRedirect("./");
+
 			return;
 		}
-    	
+
+		// Ensure the user is authorized to see this page
+		if (! user.isAdmin()) {
+            response.sendRedirect("./");
+
+            return;
+		}
+
     	// Append the list of products to the current request
     	request.setAttribute("inventorymanagement", Products.getAllProducts());
  
@@ -52,7 +60,23 @@ public class InventoryServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		User user = User.loggedInUser(request.getSession());
+
+		// Ensure the user is authenticated
+		if (user == null) {
+			// User is unauthorized, take them to the login page.
+			response.sendRedirect("/");
+
+			return;
+		}
+
+		// Ensure the user is authorized to see this page
+		if (! user.isAdmin()) {
+			response.sendRedirect("/");
+
+			return;
+		}
+
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		int quantity = Integer.parseInt(request.getParameter("quantity"));
 		

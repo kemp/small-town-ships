@@ -150,7 +150,7 @@ CREATE TABLE `verifiedaccounts` (
   `username` varchar(20) NOT NULL,
   `password` varchar(25) NOT NULL,
   `email` varchar(60) NOT NULL,
-  `login` int(11) NOT NULL DEFAULT '0',
+  `login` int(11) UNIQUE,
   `permission` tinyint(2) unsigned zerofill DEFAULT '00',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -163,7 +163,7 @@ CREATE TABLE `verifiedaccounts` (
 
 LOCK TABLES `verifiedaccounts` WRITE;
 /*!40000 ALTER TABLE `verifiedaccounts` DISABLE KEYS */;
-INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',0,01);
+INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',null,01);
 /*!40000 ALTER TABLE `verifiedaccounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,7 +285,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `Get_Permission_Level` */;
+/*!50003 DROP PROCEDURE IF EXISTS `User_With_Token` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -295,45 +295,19 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Get_Permission_Level`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `User_With_Token`(token int)
 BEGIN
--- returns the permission level of the user (if any) that is logged in currently
+-- used to find information of logged in user
 SELECT
-	permission
-FROM
-	smalltownships.verifiedaccounts
-WHERE
-	login = 1
-    LIMIT 1;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `LoggedIn` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `LoggedIn`()
-BEGIN
--- used to find first and last name of logged in user
--- also used to check if anyone is logged in, otherwise it will be empty
-SELECT
-	firstname,
-    lastname,
+    firstName,
+    lastName,
     username,
-    email
+    email,
+    permission
 FROM
 	smalltownships.verifiedaccounts
 WHERE
-	login=1
+	login=token
     LIMIT 1;
 END ;;
 DELIMITER ;
@@ -535,51 +509,19 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Try_Login`(in uname varchar(20), in pass varchar(25))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Try_Login`(in uname varchar(20), in pass varchar(25), in token int(11))
 BEGIN
--- fetches username, password from verifiedaccounts table if both match
-SELECT
-	username
-FROM
-	verifiedaccounts
+-- fetches user from verifiedaccounts table if username and password match
+UPDATE
+    verifiedaccounts
+SET
+    login = token
 WHERE
-	username = uname
+    username = uname
 AND
     password = pass;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `Update_Login` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Update_Login`(id varchar(20), flag int1)
-BEGIN
--- Used to set login flag of user whose name is supplied
--- If 0 flag is given, then it doesn't matter what user name is
-	-- all users will have login flag set to 0
-IF flag = 1 THEN
-	UPDATE
-		verifiedaccounts
-    SET
-		login = flag
-    WHERE
-		username = id;
-ELSEIF flag = 0 THEN
-	UPDATE
-		verifiedaccounts
-	SET
-		login = 0;
-end if;
+
+SELECT login from verifiedaccounts where login = token;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -623,20 +565,45 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `User_Exists`(IN uname varchar(20))
 BEGIN
+    -- retrieves any users with username that matches the input
+    SELECT
+        username
+    FROM
+        verifiedaccounts
+    WHERE
+            username = uname
+    UNION
+    SELECT
+        username
+    FROM
+        unverifiedaccounts
+    WHERE
+            username = uname;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Logout_User` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Logout_User`(IN uname varchar(20))
+BEGIN
 -- retrieves any users with username that matches the input
-SELECT
-	username
-FROM
-	verifiedaccounts
+UPDATE
+    verifiedaccounts
+SET
+    login = null
 WHERE
-	username = uname
-UNION
-SELECT
-	username
-FROM
-	unverifiedaccounts
-WHERE
-	username = uname;
+    username = uname;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

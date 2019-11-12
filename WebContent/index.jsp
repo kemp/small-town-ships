@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="me.smalltownships.LoginHandler" %>
+    pageEncoding="UTF-8" import="me.smalltownships.User" %>
 <%
 // Only allow unauthenticated users.
-if ((new LoginHandler()).isLoggedIn()) {
+if (User.isLoggedIn(request.getSession())) {
     response.sendRedirect("products");
 }
 %>

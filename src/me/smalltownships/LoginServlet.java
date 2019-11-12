@@ -23,10 +23,11 @@ public class LoginServlet extends HttpServlet {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+
+		// Try to login the user
+		User user = User.tryLogin(username, password, request.getSession());
 		
-		LoginHandler loginHandler = new LoginHandler();
-				
-		if (loginHandler.tryLogin(username, password)) {
+		if (user != null) {
 			response.sendRedirect("products");
 		} else {
 			// Incorrect username or password

@@ -33,7 +33,16 @@ public class CheckoutServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		User user = User.loggedInUser(request.getSession());
+
+		// Ensure the user is authenticated
+		if (user == null) {
+			// User is unauthorized, take them to the login page.
+			response.sendRedirect("./");
+
+			return;
+		}
+
 		List<Product> products = getProducts();
 		String productsJson = "{";
 		
@@ -56,7 +65,16 @@ public class CheckoutServlet extends HttpServlet {
 	 * 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		User user = User.loggedInUser(request.getSession());
+
+		// Ensure the user is authenticated
+		if (user == null) {
+			// User is unauthorized, take them to the login page.
+			response.sendRedirect("./");
+
+			return;
+		}
 		
 		if(! validateInputNotEmpty(request, Arrays.asList("products", "address", "cc-number", "cc-exp"))) {
 			response.sendError(400); // TODO: Change the error number or show a more helpful message
@@ -84,11 +102,11 @@ public class CheckoutServlet extends HttpServlet {
 		}
 		
 		// Create the transaction in the Database
-		TransactionHandler.createTransaction(productsCheckoutMap, deliveryAddress, creditCardNumber, creditCardExpiration);
+		TransactionHandler.createTransaction(user, productsCheckoutMap, deliveryAddress, creditCardNumber, creditCardExpiration);
 		
 		// Send the user a confirmation email.
-		String email = (new LoginHandler()).loggedInEmail();
-		
+		String email = user.getEmail();
+
 		try {
 			EmailVerifier.sendEmail(email, "Order confirmed!", "Thank you for your order with Small Town Ships.");
 		} catch (Exception e) {
