@@ -22,7 +22,8 @@ public class User extends InteractsWithSQL {
 	 */
 
 	private static final int ADMIN_PERMISSION_LEVEL = 1;
-	private static final String USER_SESSION = "user";
+	
+	protected static final String USER_SESSION = "user";
 
 	private String username, firstName, lastName, email;
 
@@ -100,7 +101,7 @@ public class User extends InteractsWithSQL {
 	/**
 	 * @return Updates the user from the database
 	 */
-	private User fresh() {
+	protected User fresh() {
 		return fetchUserByToken(this.loginToken);
 	}
 
@@ -150,25 +151,12 @@ public class User extends InteractsWithSQL {
 	}
 
 	/**
-	 * Get the currently logged in user, if there is one (refreshes from database)
+	 * Get the currently logged in user, if there is one
 	 *
 	 * @return the user | null
 	 */
 	public static User loggedInUser(HttpSession session) {
-		User user = (User)session.getAttribute(USER_SESSION);
-
-		if (user != null) {
-            user = user.fresh();
-
-            // Freshen the current user in the session.
-            session.setAttribute(USER_SESSION, user);
-
-            if (user != null) {
-            	return (User)session.getAttribute(USER_SESSION);
-			}
-		}
-
-        return null;
+		return (User)session.getAttribute(USER_SESSION);
 	}
 
 	/**
