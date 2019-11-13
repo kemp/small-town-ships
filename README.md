@@ -21,6 +21,6 @@ Small Town Ships is a basic ecommerce website for CS 4612 (Secure Software Devel
 
 **Part 3**
 
-- Google Doc
+- Google Docs: [Project report](https://docs.google.com/document/d/1OcCUsaMFyVMFk9JsmFggFEMAVUGWuU9jJPCIdGnAEcs/edit?usp=sharing), [User guide](https://docs.google.com/document/d/1IvYwuDbyocxGGfRaP6PwwmIBWZzfpXVdiAca9NjcQPY/edit?usp=sharing)
 - [D2l submission folder](https://kennesaw.view.usg.edu/d2l/lms/dropbox/user/folder_submit_files.d2l?db=1622087&grpid=1896129&isprv=0&bp=0&ou=1865956)
 - [Grading Policy](https://kennesawedu-my.sharepoint.com/:b:/g/personal/skemp13_students_kennesaw_edu/EdCgYGUaIBRJk_b6u0mK5Z4BbahFNRpEVJQ6_YquqNU2Tg?e=bsflDB)
