@@ -1,5 +1,8 @@
 [{000214A0-0000-0000-C000-000000000046}]
-Prop3=19,2
+Prop3=19,11
 [InternetShortcut]
 IDList=
-URL=http://localhost:8080/small-town-ships/
+URL=https://localhost:8443/small-town-ships/
+IconIndex=0
+HotKey=0
+IconFile=C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps\STSLogo.ico
