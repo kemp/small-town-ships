@@ -59,6 +59,8 @@ public class MySQLHandler implements AutoCloseable {
 				props.setProperty("clientCertificateKeyStoreUrl", "file:" + KEY_PATH);
 				props.setProperty("trustCertificateKeyStorePassword", ts);
 				props.setProperty("clientCertificateKeyStorePassword", ks);
+				props.setProperty("trustCertificateKeyStoreType", "JKS");
+				props.setProperty("clientCertificateKeyStoreType", "JKS");
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Exception in initializing MySQLHandler class", e);
@@ -93,7 +95,7 @@ public class MySQLHandler implements AutoCloseable {
 			p.setProperty("password", dbpswd);
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/smalltownships", p);
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/smalltownships", p);
 			if(con == null) {
 				throw new RuntimeException("Not connected to database");
 			}

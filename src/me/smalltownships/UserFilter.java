@@ -48,7 +48,7 @@ public class UserFilter implements Filter {
 		/* Forward to the next request */
 		chain.doFilter(request, response);
 	}
-
+/*
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
@@ -59,6 +59,6 @@ public class UserFilter implements Filter {
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 }
