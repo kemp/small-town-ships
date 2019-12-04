@@ -36,7 +36,8 @@ public class Register extends HttpServlet {
 		ResultSet rs;
 		Date date;
 		rs = handler.callProcedure("Create_Unverified_User(?,?,?,?,?)", 5, 
-				new String[] {firstName, lastName, user, password, email});
+				new String[] {firstName, lastName, user,
+						Encryption.hashPassword(password), email});
 		rs.next();
 		date = rs.getDate("applicationDate");
 		rs.close();

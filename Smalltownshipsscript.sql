@@ -72,11 +72,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` (id, name, description, specifications, unit_price, quantity, url) values
-(1, "Iowa Class", "<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>", "<ul><li>Speed: 33 knots</li><li>Dimensions:<ul><li>Length: 270 meters</li><li>Beam: 33 meters</li><li>Draught: 11 meters</li></ul></li><li>Armament:<ul><li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li><li>Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.</li></ul></li></ul>", 1820000000, 3, "https://nationalinterest.org/sites/default/files/main_images/DN-ST-94-00424_(17258233731).jpg"),
-(2, "Deutschland Class", "<p>While the Deutschland class \"pocket\" battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>", "<ul><li>Speed: 28 knots</li><li>Dimensions:<ul><li>Length: 186 meters</li><li>Beam: 21.6 meters</li><li>Draught: 5.8 meters</li></ul></li><li>Armament:<ul><li>Main: 6x280mm guns distributed evenly in one fore turret and one aft turret.</li><li>Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.</li><li>Torpedoes: 8x535mm</li></ul></li></ul>", 1550000000, 7, "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/German_cruiser_Deutschland_in_1935.jpg/600px-German_cruiser_Deutschland_in_1935.jpg"),
-(3, "Bismark Class", "<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>", "<ul><li>Speed: 29 knots</li><li>Dimensions:<ul><li>Length: 248 meters</li><li>Beam: 36 meters</li><li>Draught: 8.5 meters</li></ul></li><li>Armament:<ul><li>Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.</li><li>Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.</li></ul></li></ul>", 1699000000, 20, "https://upload.wikimedia.org/wikipedia/commons/f/fe/Bundesarchiv_Bild_193-04-1-26%2C_Schlachtschiff_Bismarck.jpg"),
-(4, "South Dakota Class", "<p>South Dakota class battleships are highly versatile battleships that can be used as the backbone of any battle fleet. The heavy anti-air capability and good speed of South Dakota class battleships also means that they can be used in support of carrier groups. The 405mm main armament of South Dakota class battleships means that they will tend to have more firepower than the majority of the battleships they encounter.</p>", "<ul><li>Speed: 27.5 knots</li><li>Dimensions:<ul><li>Length: 207 meters</li><li>Beam: 33 meters</li><li>Draught: 10.7 meters</li></ul></li><li>Armament:<ul><li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li><li>Secondary: 20x125mm guns, 64x40mm guns, 77x20mm guns.</li></ul></li></ul>", 1490000000, 17, "https://ak2.picdn.net/shutterstock/videos/6603842/thumb/1.jpg");
+INSERT INTO `inventory` VALUES (1,'Iowa Class','<p>Iowa class battleships are the culmination of almost 100 years of battleship development. Their speed of 33 knots puts them at the top end of battleships in speed and allows them to provide support for fast carrier groups. The Iowa class battleships also provide excellent capital ships with their high conning towers and large anti-air capability.</p>','<ul><li>Speed: 33 knots</li><li>Dimensions:<ul><li>Length: 270 meters</li><li>Beam: 33 meters</li><li>Draught: 11 meters</li></ul></li><li>Armament:<ul><li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li><li>Secondary: 20x125mm guns, 80x40mm guns, and 50x20mm guns.</li></ul></li></ul>',1820000000,60,'https://nationalinterest.org/sites/default/files/main_images/DN-ST-94-00424_(17258233731).jpg'),(2,'Deutschland Class','<p>While the Deutschland class \"pocket\" battleships do not have the firepower to match cannons with most other battleships they pack enough firepower to best any cruiser. Deutschland class battleships also have excellent speed which makes them idea commerce raiders. The lower price tag on these battleships and their overall versatility makes them excellent additions to any financially conscious battle fleet.</p>','<ul><li>Speed: 28 knots</li><li>Dimensions:<ul><li>Length: 186 meters</li><li>Beam: 21.6 meters</li><li>Draught: 5.8 meters</li></ul></li><li>Armament:<ul><li>Main: 6x280mm guns distributed evenly in one fore turret and one aft turret.</li><li>Secondary: 8x150mm guns, 6x105mm guns, 6x20mm guns.</li><li>Torpedoes: 8x535mm</li></ul></li></ul>',1550000000,55,'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/German_cruiser_Deutschland_in_1935.jpg/600px-German_cruiser_Deutschland_in_1935.jpg'),(3,'Bismark Class','<p>Bismarck class battleships are excellent for use as heavy battleships or as capital ships. Their high speed also allows them to outmaneuver slower battleships and protect fast carrier groups. Bismarck class battleships do lack heavy anti-air defenses and so are best paired with other ships with heavier anti-air defenses.</p>','<ul><li>Speed: 29 knots</li><li>Dimensions:<ul><li>Length: 248 meters</li><li>Beam: 36 meters</li><li>Draught: 8.5 meters</li></ul></li><li>Armament:<ul><li>Main: 8x380mm guns distributed evenly in two fore turrets and two aft turrets.</li><li>Secondary: 12x150mm guns, 16x105mm guns, 16x37mm guns, 12x20mm guns.</li></ul></li></ul>',1699000000,47,'https://upload.wikimedia.org/wikipedia/commons/f/fe/Bundesarchiv_Bild_193-04-1-26%2C_Schlachtschiff_Bismarck.jpg'),(4,'South Dakota Class','<p>South Dakota class battleships are highly versatile battleships that can be used as the backbone of any battle fleet. The heavy anti-air capability and good speed of South Dakota class battleships also means that they can be used in support of carrier groups. The 405mm main armament of South Dakota class battleships means that they will tend to have more firepower than the majority of the battleships they encounter.</p>','<ul><li>Speed: 27.5 knots</li><li>Dimensions:<ul><li>Length: 207 meters</li><li>Beam: 33 meters</li><li>Draught: 10.7 meters</li></ul></li><li>Armament:<ul><li>Main: 9x405mm guns distributed evenly in two fore turrets and one aft turret.</li><li>Secondary: 20x125mm guns, 64x40mm guns, 77x20mm guns.</li></ul></li></ul>',1490000000,25,'https://ak2.picdn.net/shutterstock/videos/6603842/thumb/1.jpg');
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,8 +87,8 @@ CREATE TABLE `transactions` (
   `transid` int(11) NOT NULL,
   `username` varchar(45) NOT NULL,
   `price` decimal(15,0) NOT NULL,
-  `cardnumber` varchar(16) NOT NULL,
-  `cardExpiration` varchar(7) NOT NULL,
+  `cardnumber` binary(32) NOT NULL,
+  `cardExpiration` binary(16) NOT NULL,
   `deliveryAddress` tinytext,
   PRIMARY KEY (`transid`),
   KEY `username_idx` (`username`),
@@ -107,7 +103,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (1,'manager',0,'0','',NULL);
+INSERT INTO `transactions` VALUES (1,'manager',0,0xF8074B71C65CBD28E0EB13C0EF5E2071B4F3AC7F46960B7827EE5C6D78EACA8D,0xB033CBF8350DF6D563DA039AE58831B9,NULL),(15,'manager',0,0x746852252D65EC0EF88740572139C11FC500B2AE0A9AF9C6945DB384768D6B43,0x970410CC8E388DEA211A1E031D146661,'1234 Main Street');
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +118,7 @@ CREATE TABLE `unverifiedaccounts` (
   `firstName` varchar(20) DEFAULT NULL,
   `lastName` varchar(30) DEFAULT NULL,
   `username` varchar(20) NOT NULL,
-  `password` varchar(25) NOT NULL,
+  `password` char(66) NOT NULL,
   `email` varchar(60) NOT NULL,
   `applicationDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -149,11 +145,12 @@ CREATE TABLE `verifiedaccounts` (
   `firstName` varchar(20) DEFAULT NULL,
   `lastName` varchar(30) DEFAULT NULL,
   `username` varchar(20) NOT NULL,
-  `password` varchar(25) NOT NULL,
+  `password` char(66) NOT NULL,
   `email` varchar(60) NOT NULL,
-  `login` int(11) UNIQUE,
+  `login` int(11) DEFAULT NULL,
   `permission` tinyint(2) unsigned zerofill DEFAULT '00',
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `login` (`login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -164,7 +161,7 @@ CREATE TABLE `verifiedaccounts` (
 
 LOCK TABLES `verifiedaccounts` WRITE;
 /*!40000 ALTER TABLE `verifiedaccounts` DISABLE KEYS */;
-INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ims','default',null,01);
+INSERT INTO `verifiedaccounts` VALUES ('Manager','Account','manager','ujTo6aJzhKZhRUJujz0y6g$AruxXao795SPKiITzDBRvtw90CUi1L17CwOTReav5eo','default',NULL,01);
 /*!40000 ALTER TABLE `verifiedaccounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,7 +184,7 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `All_Products`()
 BEGIN
--- fetches every product in inventory
+
 SELECT 
 	*
 FROM
@@ -242,9 +239,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_Unverified_User`(in fName varchar(20), in lName varchar(30), in uname varchar(20), in pass varchar(25), in address varchar(60))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_Unverified_User`(in fName varchar(20), in lName varchar(30), in uname varchar(20), in pass char(66), in address varchar(60))
 BEGIN
--- Adds user to unverifiedaccounts table
+
 INSERT INTO 
 	smalltownships.unverifiedaccounts
 VALUES
@@ -268,7 +265,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Email_Exists`(in address varchar(60))
 BEGIN
--- retrieves any users with email that matches the input
+
 SELECT
 	username
 FROM
@@ -286,7 +283,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `User_With_Token` */;
+/*!50003 DROP PROCEDURE IF EXISTS `Logout_User` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -296,20 +293,15 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `User_With_Token`(token int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Logout_User`(IN uname varchar(20))
 BEGIN
--- used to find information of logged in user
-SELECT
-    firstName,
-    lastName,
-    username,
-    email,
-    permission
-FROM
-	smalltownships.verifiedaccounts
+
+UPDATE
+    verifiedaccounts
+SET
+    login = null
 WHERE
-	login=token
-    LIMIT 1;
+    username = uname;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -352,15 +344,18 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `New_Transaction`(in id int(11), in uname varchar(20), in cost decimal(15,0), in card varchar(16), in exp varchar(7), in address tinytext)
 BEGIN
--- creates new transaction entry in transaction table
+declare pass,iv char(64);
+set pass =(SELECT SHA2(password,256) from smalltownships.verifiedaccounts where username = uname);
+set iv = (SELECT MD5(uname) from smalltownships.verifiedaccounts where username = uname);
+
 INSERT INTO
 	smalltownships.transactions
 VALUES (
 	id,
     uname,
     cost,
-    card,
-    exp,
+    AES_ENCRYPT(card,pass,iv),
+    AES_ENCRYPT(exp,pass,iv),
     address );
 END ;;
 DELIMITER ;
@@ -380,7 +375,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Next_Trans_ID`()
 BEGIN
--- returns the value the next transaction id should be
+
 DECLARE a, b int;
 SELECT
 	MAX(transid)
@@ -408,7 +403,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Remove_User`(IN uname varchar(20))
 BEGIN
--- used to delete user accounts from both account tables
+
 DELETE FROM
 	verifiedaccounts
 WHERE
@@ -435,7 +430,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Search_Unverified_User`(in uname varchar(20))
 BEGIN
--- used to select data from unverifiedaccounts table for verification purposes
+
 SELECT
 	*
 FROM
@@ -460,7 +455,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Search_Verified_User`(id varchar(60))
 BEGIN
--- Searches for user whose username or email matches the input parameter
+
 SELECT 
 	* 
 FROM 
@@ -487,7 +482,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Stocked_Products`()
 BEGIN
--- fetches each product whose quantity in inventory is > 0
+
 SELECT 
 	*
 FROM
@@ -510,9 +505,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Try_Login`(in uname varchar(20), in pass varchar(25), in token int(11))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Try_Login`(in uname varchar(20), in pass char(66), in token int(11))
 BEGIN
--- fetches user from verifiedaccounts table if username and password match
+
 UPDATE
     verifiedaccounts
 SET
@@ -541,7 +536,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Update_Permission`(in uname varchar(20), in perm tinyint)
 BEGIN
--- allows update of user permission level
+
 UPDATE
 	verifiedaccounts
 SET
@@ -566,7 +561,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `User_Exists`(IN uname varchar(20))
 BEGIN
-    -- retrieves any users with username that matches the input
+    
     SELECT
         username
     FROM
@@ -586,7 +581,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `Logout_User` */;
+/*!50003 DROP PROCEDURE IF EXISTS `User_With_Token` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -596,15 +591,44 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Logout_User`(IN uname varchar(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `User_With_Token`(token int)
 BEGIN
--- retrieves any users with username that matches the input
-UPDATE
-    verifiedaccounts
-SET
-    login = null
+
+SELECT
+    firstName,
+    lastName,
+    username,
+    email,
+    permission
+FROM
+	smalltownships.verifiedaccounts
 WHERE
-    username = uname;
+	login=token
+    LIMIT 1;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Verified_Password` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Verified_Password`(in uname varchar(20))
+BEGIN
+SELECT
+	password
+FROM
+	verifiedaccounts
+WHERE
+	username = uname;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -623,7 +647,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `Verify_User`(in uname varchar(20))
 BEGIN
--- moves user from unverifiedaccounts table to verifiedaccounts table
+
 INSERT INTO
 	verifiedaccounts (
 		firstName,
@@ -661,4 +685,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed
+-- Dump completed on 2019-12-03 23:05:46

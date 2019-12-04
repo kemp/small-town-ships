@@ -98,6 +98,8 @@ public class EmailVerifier {
 		r.setSeed(r.generateSeed(256));
 		r.setSeed(r.nextLong() ^ System.nanoTime() ^ r.nextLong());
 		r.setSeed(getUniqueSeed());
+		r.setSeed(r.nextLong() ^ System.nanoTime() ^ r.nextLong());
+		r.setSeed(r.generateSeed(256));
 		return r;
 	}
 	
@@ -179,8 +181,8 @@ public class EmailVerifier {
 			tmp = SecureRandom.getInstanceStrong();
 		} catch (NoSuchAlgorithmException e1) {
 			// No strong RNG found, try to find a secure RNG
-			String[] algs = { "PKCS11", "SHA1PRNG", "NativePRNG", "NativePRNGBlocking",
-					"NativePRNGNonBlocking" };
+			String[] algs = { "NativePRNG", "NativePRNGBlocking",
+					"NativePRNGNonBlocking", "PKCS11", "SHA1PRNG" };
 			for (String alg : algs) {
 				try {
 					tmp = SecureRandom.getInstance(alg);

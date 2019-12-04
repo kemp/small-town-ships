@@ -73,12 +73,33 @@ public class User extends InteractsWithSQL {
 		if (username.length() > 20 || password.length() > 25) {
 			return null;
 		}
-		
-		try {
-			// Generate a random token to authenticate this user.
-			int loginToken = (new Random()).nextInt();
 
-			ResultSet rs = sqlHandler.callProcedure("Try_Login(?,?,?)", username, password, loginToken);
+		// Generate a random token to authenticate this user.
+		int loginToken = (new Random()).nextInt();
+		String hash;
+		ResultSet rs;
+		
+		// get the password so that we can hash and verify it
+		try {
+			rs = sqlHandler.callProcedure("Verified_Password(?)", username);
+			
+			if (!rs.next()) {
+				return null; 
+			}
+			hash = rs.getString("password");
+		} catch (Exception e) {
+			System.err.println("Exception in calling Verified_Password(" + username + ")");
+			e.printStackTrace();
+			return null;
+		}
+		
+		if (!Encryption.verifyPassword(password, hash)) {
+			// password does not match
+			return null;
+		}
+
+		try {
+			rs = sqlHandler.callProcedure("Try_Login(?,?,?)", username, hash, loginToken);
 
 			if (rs.next()) {
 				User user = fetchUserByToken(loginToken);
